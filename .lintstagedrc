@@ -1,0 +1,13 @@
+{
+  "*.md": [
+    "remark .",
+    "prettier --write",
+  ],
+  "*.ts": [
+    "eslint",
+    "prettier --write",
+  ],
+  "*.{js,json}": [
+    "prettier --write",
+  ]
+}
