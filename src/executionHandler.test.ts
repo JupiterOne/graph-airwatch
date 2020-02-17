@@ -1,11 +1,17 @@
 import { IntegrationExecutionContext } from "@jupiterone/jupiter-managed-integration-sdk";
 import executionHandler from "./executionHandler";
 import initializeContext from "./initializeContext";
-import {
-  DEVICE_ENTITY_TYPE,
-  USER_DEVICE_RELATIONSHIP_TYPE,
-  USER_ENTITY_TYPE,
-} from "./types";
+
+import { DEVICE_ENTITY_TYPE } from "./jupiterone/entities/DeviceEntity";
+import { ACCOUNT_ENTITY_TYPE } from "./jupiterone/entities/AccountEntity";
+import { ADMIN_ENTITY_TYPE } from "./jupiterone/entities/AdminEntity";
+import { ORGANIZATION_GROUP_ENTITY_TYPE } from "./jupiterone/entities/OrganizationGroupEntity";
+import { DEVICE_USER_ENTITY_TYPE } from "./jupiterone/entities/UserEntity";
+
+import { ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE } from "./jupiterone/relationships/AccountOrganizationGroupRelationship";
+import { ACCOUNT_DEVICE_RELATIONSHIP_TYPE } from "./jupiterone/relationships/AccountDeviceRelationship";
+import { ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE } from "./jupiterone/relationships/OrganizationGroupAdminRelationship";
+import { USER_DEVICE_RELATIONSHIP_TYPE } from "./jupiterone/relationships/UserDeviceRelationship";
 
 jest.mock("./initializeContext");
 
@@ -21,9 +27,14 @@ test("executionHandler", async () => {
       publishPersisterOperations: jest.fn().mockResolvedValue({}),
     },
     provider: {
-      fetchAccountDetails: jest.fn().mockReturnValue({}),
       fetchDevices: jest.fn().mockReturnValue([]),
-      fetchUsers: jest.fn().mockReturnValue([]),
+      fetchAdmins: jest.fn().mockReturnValue([]),
+      fetchOrganizationGroups: jest.fn().mockReturnValue([]),
+      parseDeviceUsers: jest.fn().mockReturnValue([]),
+    },
+    account: {
+      uuid: "testUuid",
+      name: "testName",
     },
   };
 
@@ -33,26 +44,43 @@ test("executionHandler", async () => {
   await executionHandler(invocationContext);
 
   expect(initializeContext).toHaveBeenCalledWith(invocationContext);
-
   expect(executionContext.graph.findEntitiesByType).toHaveBeenCalledWith(
-    USER_ENTITY_TYPE,
+    ACCOUNT_ENTITY_TYPE,
+  );
+  expect(executionContext.graph.findEntitiesByType).toHaveBeenCalledWith(
+    ADMIN_ENTITY_TYPE,
+  );
+  expect(executionContext.graph.findEntitiesByType).toHaveBeenCalledWith(
+    ORGANIZATION_GROUP_ENTITY_TYPE,
   );
   expect(executionContext.graph.findEntitiesByType).toHaveBeenCalledWith(
     DEVICE_ENTITY_TYPE,
   );
-  expect(executionContext.graph.findRelationshipsByType).toHaveBeenCalledWith(
+  expect(executionContext.graph.findEntitiesByType).toHaveBeenCalledWith(
+    DEVICE_USER_ENTITY_TYPE,
+  );
+
+  expect(executionContext.graph.findRelationshipsByType).toHaveBeenCalledWith([
+    ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
+    ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
+  ]);
+  expect(executionContext.graph.findRelationshipsByType).toHaveBeenCalledWith([
+    ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE,
+  ]);
+  expect(executionContext.graph.findRelationshipsByType).toHaveBeenCalledWith([
     USER_DEVICE_RELATIONSHIP_TYPE,
-  );
+  ]);
 
-  expect(executionContext.provider.fetchAccountDetails).toHaveBeenCalledTimes(
-    1,
-  );
-  expect(executionContext.provider.fetchUsers).toHaveBeenCalledTimes(1);
   expect(executionContext.provider.fetchDevices).toHaveBeenCalledTimes(1);
+  expect(executionContext.provider.fetchAdmins).toHaveBeenCalledTimes(1);
+  expect(
+    executionContext.provider.fetchOrganizationGroups,
+  ).toHaveBeenCalledTimes(1);
+  expect(executionContext.provider.parseDeviceUsers).toHaveBeenCalledTimes(1);
 
-  expect(executionContext.persister.processEntities).toHaveBeenCalledTimes(3);
+  expect(executionContext.persister.processEntities).toHaveBeenCalledTimes(5);
   expect(executionContext.persister.processRelationships).toHaveBeenCalledTimes(
-    2,
+    3,
   );
   expect(
     executionContext.persister.publishPersisterOperations,

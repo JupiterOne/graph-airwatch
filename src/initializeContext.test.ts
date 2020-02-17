@@ -2,7 +2,17 @@ import { createTestIntegrationExecutionContext } from "@jupiterone/jupiter-manag
 import initializeContext from "./initializeContext";
 
 test("creates provider client", () => {
-  const executionContext = createTestIntegrationExecutionContext();
+  const options = {
+    instance: {
+      config: {
+        airwatchHost: "",
+        airwatchUsername: "",
+        airwatchPassword: "",
+        airwatchApiKey: "",
+      },
+    },
+  };
+  const executionContext = createTestIntegrationExecutionContext(options);
   const integrationContext = initializeContext(executionContext);
   expect(integrationContext.provider).toBeDefined();
 });

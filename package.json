@@ -29,7 +29,12 @@
     "test": "jest"
   },
   "dependencies": {
-    "@jupiterone/jupiter-managed-integration-sdk": "^33.1.1"
+    "@jupiterone/jupiter-managed-integration-sdk": "^33.1.1",
+    "@types/moment": "^2.13.0",
+    "@types/node-fetch": "^2.5.4",
+    "aws-sdk": "^2.619.0",
+    "moment": "^2.24.0",
+    "node-fetch": "^2.6.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

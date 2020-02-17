@@ -5,13 +5,19 @@ import invocationValidator from "./invocationValidator";
 
 export const invocationConfig: IntegrationInvocationConfig = {
   instanceConfigFields: {
-    clientId: {
-      type: "string",
-      mask: false,
-    },
-    clientSecret: {
+    airwatchApiKey: {
       type: "string",
       mask: true,
+    },
+    airwatchUsername: {
+      type: "string",
+    },
+    airwatchPassword: {
+      type: "string",
+      mask: true,
+    },
+    airwatchHost: {
+      type: "string",
     },
   },
 
