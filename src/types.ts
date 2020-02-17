@@ -4,7 +4,7 @@ import {
   IntegrationExecutionContext,
   PersisterClient,
 } from "@jupiterone/jupiter-managed-integration-sdk";
-import ProviderClient from "./ProviderClient";
+import AirwatchClient from "./ProviderClient";
 
 export const ACCOUNT_ENTITY_TYPE = "provider_account";
 export const ACCOUNT_ENTITY_CLASS = "Account";
@@ -36,5 +36,5 @@ export interface DeviceEntity extends EntityFromIntegration {
 export interface ExampleExecutionContext extends IntegrationExecutionContext {
   graph: GraphClient;
   persister: PersisterClient;
-  provider: ProviderClient;
+  provider: AirwatchClient;
 }

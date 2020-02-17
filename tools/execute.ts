@@ -3,7 +3,10 @@ import { executeIntegrationLocal } from "@jupiterone/jupiter-managed-integration
 import { invocationConfig } from "../src/index";
 
 const integrationConfig = {
-  // providerApiToken: process.env.PROVIDER_LOCAL_EXECUTION_API_TOKEN
+  airwatchApiKey: process.env.AIRWATCH_LOCAL_EXECUTION_API_TOKEN,
+  airwatchUsername: process.env.AIRWATCH_LOCAL_EXECUTION_USERNAME,
+  airwatchPassword: process.env.AIRWATCH_LOCAL_EXECUTION_PASSWORD,
+  airwatchHost: process.env.AIRWATCH_LOCAL_EXECUTION_HOST,
 };
 
 const invocationArgs = {

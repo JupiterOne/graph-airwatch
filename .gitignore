@@ -5,3 +5,5 @@ dist/
 yarn-error.log
 .env
 .env.*
+conf/
+docker-compose.yml

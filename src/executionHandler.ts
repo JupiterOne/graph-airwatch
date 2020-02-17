@@ -10,7 +10,7 @@ import {
   createUserEntities,
 } from "./converters";
 import initializeContext from "./initializeContext";
-import ProviderClient from "./ProviderClient";
+import AirwatchClient from "./ProviderClient";
 import {
   ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
   ACCOUNT_ENTITY_TYPE,
@@ -91,18 +91,18 @@ export default async function executionHandler(
   };
 }
 
-function fetchAccountEntitiesFromProvider(
-  provider: ProviderClient,
-): AccountEntity[] {
-  return [createAccountEntity(provider.fetchAccountDetails())];
+async function fetchAccountEntitiesFromProvider(
+  provider: AirwatchClient,
+): Promise<AccountEntity[]> {
+  return [createAccountEntity(await provider.fetchAccountDetails())];
 }
 
-function fetchUserEntitiesFromProvider(provider: ProviderClient): UserEntity[] {
+function fetchUserEntitiesFromProvider(provider: AirwatchClient): UserEntity[] {
   return createUserEntities(provider.fetchUsers());
 }
 
 function fetchDeviceEntitiesFromProvider(
-  provider: ProviderClient,
+  provider: AirwatchClient,
 ): DeviceEntity[] {
   return createDeviceEntities(provider.fetchDevices());
 }
