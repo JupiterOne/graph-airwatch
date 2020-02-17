@@ -10,7 +10,7 @@ import {
   createUserEntities,
 } from "./converters";
 import initializeContext from "./initializeContext";
-import AirwatchClient from "./ProviderClient";
+import AirwatchClient from "./airwatch/AirwatchClient";
 import {
   ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
   ACCOUNT_ENTITY_TYPE,

@@ -3,7 +3,7 @@ import {
   IntegrationInstanceConfigError,
   IntegrationInstanceAuthenticationError,
 } from "@jupiterone/jupiter-managed-integration-sdk";
-import AirwatchClient from "./ProviderClient";
+import AirwatchClient from "./airwatch/AirwatchClient";
 
 /**
  * Performs validation of the execution before the execution handler function is

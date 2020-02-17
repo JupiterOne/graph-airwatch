@@ -1,36 +1,6 @@
 import fetch, { RequestInit, Response } from "node-fetch";
 
-export interface Accounts {
-  admins: AdminAccount[];
-}
-
-export interface AdminAccount {
-  uuid: string;
-  firstName: string;
-  lastName: string;
-}
-
-export interface Account {
-  id: string;
-  name: string;
-}
-
-export interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-}
-
-export interface Device {
-  id: string;
-  manufacturer: string;
-  ownerId: string;
-}
-
-enum Method {
-  GET = "get",
-  POST = "post",
-}
+import { Account, Device, User, AdminsResponse, HttpMethod } from "./types";
 
 export default class AirwatchClient {
   private readonly host: string;
@@ -51,29 +21,24 @@ export default class AirwatchClient {
   }
 
   public async fetchAccountDetails(): Promise<Account> {
-    const response = await this.makeRequest<Accounts>(
+    const response = await this.makeRequest<AdminsResponse>(
       "/system/admins/search",
-      Method.GET,
+      HttpMethod.GET,
       {},
     );
-    const exampleAccount: AdminAccount = response.admins[0];
-    console.log("exampleAccount", exampleAccount);
 
-    return {
-      id: "account-a",
-      name: "Account A",
-    };
+    return response.admins[0];
   }
 
   public fetchDevices(): Device[] {
     return [
       {
-        id: "device-a",
+        uuid: "device-a",
         manufacturer: "Manufacturer A",
         ownerId: "user-a",
       },
       {
-        id: "device-b",
+        uuid: "device-b",
         manufacturer: "Manufacturer B",
         ownerId: "user-b",
       },
@@ -84,12 +49,12 @@ export default class AirwatchClient {
     return [
       {
         firstName: "User",
-        id: "user-a",
+        uuid: "user-a",
         lastName: "A",
       },
       {
         firstName: "User",
-        id: "user-b",
+        uuid: "user-b",
         lastName: "B",
       },
     ];
@@ -97,7 +62,7 @@ export default class AirwatchClient {
 
   private async makeRequest<T>(
     url: string,
-    method: Method,
+    method: HttpMethod,
     params: {},
     headers?: {},
   ): Promise<T> {

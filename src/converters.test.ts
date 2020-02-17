@@ -5,7 +5,7 @@ import {
   createUserDeviceRelationships,
   createUserEntities,
 } from "./converters";
-import { Account, Device, User } from "./ProviderClient";
+import { Account, Device, User } from "./airwatch/types";
 import {
   ACCOUNT_USER_RELATIONSHIP_TYPE,
   DEVICE_ENTITY_CLASS,
@@ -17,21 +17,22 @@ import {
 } from "./types";
 
 const account: Account = {
-  id: "account-1",
-  name: "account-name",
+  uuid: "account-1",
+  firstName: "first",
+  lastName: "last",
 };
 
 const users: User[] = [
   {
     firstName: "fname",
-    id: "user-1",
+    uuid: "user-1",
     lastName: "lname",
   },
 ];
 
 const devices: Device[] = [
   {
-    id: "device-1",
+    uuid: "device-1",
     manufacturer: "man-1",
     ownerId: "user-1",
   },

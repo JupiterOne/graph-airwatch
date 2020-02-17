@@ -2,7 +2,7 @@ import {
   EntityFromIntegration,
   RelationshipFromIntegration,
 } from "@jupiterone/jupiter-managed-integration-sdk";
-import { Account, Device, User } from "./ProviderClient";
+import { Account, Device, User } from "./airwatch/types";
 import {
   ACCOUNT_ENTITY_CLASS,
   ACCOUNT_ENTITY_TYPE,
@@ -20,29 +20,29 @@ import {
 export function createAccountEntity(data: Account): AccountEntity {
   return {
     _class: ACCOUNT_ENTITY_CLASS,
-    _key: `provider-account-${data.id}`,
+    _key: `provider-account-${data.uuid}`,
     _type: ACCOUNT_ENTITY_TYPE,
-    accountId: data.id,
-    displayName: data.name,
+    accountId: data.uuid,
+    displayName: `${data.firstName} ${data.lastName}`,
   };
 }
 
 export function createUserEntities(data: User[]): UserEntity[] {
   return data.map(d => ({
     _class: USER_ENTITY_CLASS,
-    _key: `provider-user-${d.id}`,
+    _key: `provider-user-${d.uuid}`,
     _type: USER_ENTITY_TYPE,
     displayName: `${d.firstName} ${d.lastName}`,
-    userId: d.id,
+    userId: d.uuid,
   }));
 }
 
 export function createDeviceEntities(data: Device[]): DeviceEntity[] {
   return data.map(d => ({
     _class: DEVICE_ENTITY_CLASS,
-    _key: `provider-device-id-${d.id}`,
+    _key: `provider-device-id-${d.uuid}`,
     _type: DEVICE_ENTITY_TYPE,
-    deviceId: d.id,
+    deviceId: d.uuid,
     displayName: d.manufacturer,
     ownerId: d.ownerId,
   }));
