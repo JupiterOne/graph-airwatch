@@ -84,7 +84,7 @@ export default class AirwatchClient {
       options,
     );
     if (!response) {
-      throw new Error("Couldn't get response!");
+      throw new Error(`No response from 'https://${this.host}/api${url}'`);
     }
 
     if (response.status === 200) {

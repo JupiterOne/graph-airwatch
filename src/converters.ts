@@ -20,7 +20,7 @@ import {
 export function createAccountEntity(data: Account): AccountEntity {
   return {
     _class: ACCOUNT_ENTITY_CLASS,
-    _key: `provider-account-${data.uuid}`,
+    _key: `airwatch-account-${data.uuid}`,
     _type: ACCOUNT_ENTITY_TYPE,
     accountId: data.uuid,
     displayName: `${data.firstName} ${data.lastName}`,
@@ -30,7 +30,7 @@ export function createAccountEntity(data: Account): AccountEntity {
 export function createUserEntities(data: User[]): UserEntity[] {
   return data.map(d => ({
     _class: USER_ENTITY_CLASS,
-    _key: `provider-user-${d.uuid}`,
+    _key: `airwatch-user-${d.uuid}`,
     _type: USER_ENTITY_TYPE,
     displayName: `${d.firstName} ${d.lastName}`,
     userId: d.uuid,
@@ -40,7 +40,7 @@ export function createUserEntities(data: User[]): UserEntity[] {
 export function createDeviceEntities(data: Device[]): DeviceEntity[] {
   return data.map(d => ({
     _class: DEVICE_ENTITY_CLASS,
-    _key: `provider-device-id-${d.uuid}`,
+    _key: `airwatch-device-id-${d.uuid}`,
     _type: DEVICE_ENTITY_TYPE,
     deviceId: d.uuid,
     displayName: d.manufacturer,
