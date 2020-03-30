@@ -282,7 +282,6 @@ test("createAccountHasOrganizationGroupsRelationships", () => {
       organizationGroupEntities,
       ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
       ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
-      "has",
     ),
   ).toEqual([
     {
@@ -307,7 +306,6 @@ test("createAccountManagesDevicesRelationships", () => {
       deviceEntities,
       ACCOUNT_DEVICE_RELATIONSHIP_CLASS,
       ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
-      "manages",
     ),
   ).toEqual([
     {
