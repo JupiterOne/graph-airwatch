@@ -236,7 +236,7 @@ test("createOrganizationGroupEntities", () => {
         },
       ],
       country: "country",
-      createdOn: "1584616796000",
+      createdOn: 1584620396,
       displayName: "organization-group-name",
       groupId: 123,
       locationGroupType: "location-group-type",

@@ -1,7 +1,7 @@
 {
   "name": "@jupiterone/graph-airwatch",
   "version": "0.1.0",
-  "description": "A template for JupiterOne graph converters.",
+  "description": "A graph conversion tool for https://www.air-watch.com/.",
   "main": "dist/index.js",
   "repository": "https://github.com/JupiterOne/graph-airwatch",
   "license": "SEE LICENSE IN LICENSE",
@@ -29,7 +29,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@jupiterone/jupiter-managed-integration-sdk": "^33.1.1",
+    "@jupiterone/jupiter-managed-integration-sdk": "^33.5.2",
     "@types/moment": "^2.13.0",
     "@types/node-fetch": "^2.5.4",
     "aws-sdk": "^2.619.0",

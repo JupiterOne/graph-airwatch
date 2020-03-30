@@ -11,5 +11,5 @@ export interface OrganizationGroupEntity extends EntityFromIntegration {
   country: string;
   displayName: string;
   webLink: string;
-  createdOn: string;
+  createdOn: number;
 }

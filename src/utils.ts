@@ -1,5 +1,5 @@
 import moment from "moment";
 
-export function parseDatetime(time: string): string {
-  return moment(time, "M/D/YYYY h:m:ss").format("x");
+export function parseDatetime(time: string): number {
+  return moment.utc(time, "M/D/YYYY h:m:ss").unix();
 }
