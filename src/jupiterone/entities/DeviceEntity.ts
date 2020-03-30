@@ -1,6 +1,6 @@
 import { EntityFromIntegration } from "@jupiterone/jupiter-managed-integration-sdk";
 
-export const DEVICE_ENTITY_TYPE = "airwatch_device";
+export const DEVICE_ENTITY_TYPE = "user_endpoint";
 export const DEVICE_ENTITY_CLASS = ["Host", "Device"];
 
 export interface DeviceEntity extends EntityFromIntegration {

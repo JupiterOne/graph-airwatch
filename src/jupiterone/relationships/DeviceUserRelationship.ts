@@ -1,2 +1,2 @@
-export const DEVICE_USER_RELATIONSHIP_TYPE = "airwatch_device_user";
-export const DEVICE_USER_RELATIONSHIP_CLASS = "HAS";
+export const USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE =
+  "user_endpoint_has_user";

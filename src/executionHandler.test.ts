@@ -1,17 +1,16 @@
 import { IntegrationExecutionContext } from "@jupiterone/jupiter-managed-integration-sdk";
+
 import executionHandler from "./executionHandler";
 import initializeContext from "./initializeContext";
-
-import { DEVICE_ENTITY_TYPE } from "./jupiterone/entities/DeviceEntity";
 import { ACCOUNT_ENTITY_TYPE } from "./jupiterone/entities/AccountEntity";
 import { ADMIN_ENTITY_TYPE } from "./jupiterone/entities/AdminEntity";
+import { DEVICE_ENTITY_TYPE } from "./jupiterone/entities/DeviceEntity";
 import { ORGANIZATION_GROUP_ENTITY_TYPE } from "./jupiterone/entities/OrganizationGroupEntity";
 import { DEVICE_USER_ENTITY_TYPE } from "./jupiterone/entities/UserEntity";
-
-import { ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE } from "./jupiterone/relationships/AccountOrganizationGroupRelationship";
 import { ACCOUNT_DEVICE_RELATIONSHIP_TYPE } from "./jupiterone/relationships/AccountDeviceRelationship";
+import { ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE } from "./jupiterone/relationships/AccountOrganizationGroupRelationship";
+import { USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE } from "./jupiterone/relationships/DeviceUserRelationship";
 import { ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE } from "./jupiterone/relationships/OrganizationGroupAdminRelationship";
-import { USER_DEVICE_RELATIONSHIP_TYPE } from "./jupiterone/relationships/UserDeviceRelationship";
 
 jest.mock("./initializeContext");
 
@@ -68,7 +67,7 @@ test("executionHandler", async () => {
     ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE,
   ]);
   expect(executionContext.graph.findRelationshipsByType).toHaveBeenCalledWith([
-    USER_DEVICE_RELATIONSHIP_TYPE,
+    USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE,
   ]);
 
   expect(executionContext.provider.fetchDevices).toHaveBeenCalledTimes(1);

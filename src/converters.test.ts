@@ -1,43 +1,28 @@
 import {
+  AirWatchAccount,
+  AirWatchAdmin,
+  AirWatchDevice,
+  AirWatchDeviceUser,
+  AirWatchOrganizationGroup,
+} from "./airwatch/types";
+import {
   createAccountEntity,
   createAccountRelationships,
   createAdminEntities,
   createDeviceEntities,
-  createUserEntities,
+  createDeviceUserRelationships,
   createOrganizationGroupEntities,
   createOrganizationGroupRelationships,
-  createDeviceUserRelationships,
+  createUserEntities,
 } from "./converters";
-
-import {
-  AirWatchAccount,
-  AirWatchOrganizationGroup,
-  AirWatchDevice,
-  AirWatchAdmin,
-  AirWatchDeviceUser,
-} from "./airwatch/types";
-
-import {
-  ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
-  ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
-} from "./jupiterone/relationships/AccountOrganizationGroupRelationship";
-
-import {
-  ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
-  ACCOUNT_DEVICE_RELATIONSHIP_CLASS,
-} from "./jupiterone/relationships/AccountDeviceRelationship";
-
-import { ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE } from "./jupiterone/relationships/OrganizationGroupAdminRelationship";
-
-import { USER_DEVICE_RELATIONSHIP_TYPE } from "./jupiterone/relationships/UserDeviceRelationship";
-import {
-  ADMIN_ENTITY_CLASS,
-  ADMIN_ENTITY_TYPE,
-} from "./jupiterone/entities/AdminEntity";
 import {
   ACCOUNT_ENTITY_CLASS,
   ACCOUNT_ENTITY_TYPE,
 } from "./jupiterone/entities/AccountEntity";
+import {
+  ADMIN_ENTITY_CLASS,
+  ADMIN_ENTITY_TYPE,
+} from "./jupiterone/entities/AdminEntity";
 import {
   DEVICE_ENTITY_CLASS,
   DEVICE_ENTITY_TYPE,
@@ -47,9 +32,19 @@ import {
   ORGANIZATION_GROUP_ENTITY_TYPE,
 } from "./jupiterone/entities/OrganizationGroupEntity";
 import {
-  DEVICE_USER_ENTITY_TYPE,
   DEVICE_USER_ENTITY_CLASS,
+  DEVICE_USER_ENTITY_TYPE,
 } from "./jupiterone/entities/UserEntity";
+import {
+  ACCOUNT_DEVICE_RELATIONSHIP_CLASS,
+  ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
+} from "./jupiterone/relationships/AccountDeviceRelationship";
+import {
+  ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
+  ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
+} from "./jupiterone/relationships/AccountOrganizationGroupRelationship";
+import { USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE } from "./jupiterone/relationships/DeviceUserRelationship";
+import { ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE } from "./jupiterone/relationships/OrganizationGroupAdminRelationship";
 
 const account: AirWatchAccount = {
   uuid: "account-1",
@@ -351,24 +346,18 @@ test("createOrganizationGroupHasAdminsRelationships", () => {
   ]);
 });
 
-// Testing Device->HAS->Admins(Users, endpoint_user)
+// Testing Device->HAS->Admins(Users, device_user)
 test("createDeviceHasUsersRelationships", () => {
   const userEntities = createUserEntities("host", deviceUsers);
   const deviceEntities = createDeviceEntities("host", devices);
 
-  expect(
-    createDeviceUserRelationships(
-      userEntities,
-      deviceEntities,
-      USER_DEVICE_RELATIONSHIP_TYPE,
-    ),
-  ).toEqual([
+  expect(createDeviceUserRelationships(userEntities, deviceEntities)).toEqual([
     {
       _class: "HAS",
       _fromEntityKey: "airwatch-device-id-device-1",
       _key: "airwatch-device-id-device-1_has_airwatch-user-device-1-ownerId",
       _toEntityKey: "airwatch-user-device-1-ownerId",
-      _type: USER_DEVICE_RELATIONSHIP_TYPE,
+      _type: USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE,
     },
   ]);
 });
