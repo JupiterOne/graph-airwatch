@@ -23,7 +23,6 @@ export interface AirWatchAdmin {
   firstName: string;
   lastName: string;
   email: string;
-  displayName: string;
 }
 
 export interface AirWatchDevice {

@@ -2,15 +2,17 @@ import { IntegrationExecutionContext } from "@jupiterone/jupiter-managed-integra
 
 import executionHandler from "./executionHandler";
 import initializeContext from "./initializeContext";
-import { ACCOUNT_ENTITY_TYPE } from "./jupiterone/entities/AccountEntity";
-import { ADMIN_ENTITY_TYPE } from "./jupiterone/entities/AdminEntity";
-import { DEVICE_ENTITY_TYPE } from "./jupiterone/entities/DeviceEntity";
-import { ORGANIZATION_GROUP_ENTITY_TYPE } from "./jupiterone/entities/OrganizationGroupEntity";
-import { DEVICE_USER_ENTITY_TYPE } from "./jupiterone/entities/UserEntity";
-import { ACCOUNT_DEVICE_RELATIONSHIP_TYPE } from "./jupiterone/relationships/AccountDeviceRelationship";
-import { ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE } from "./jupiterone/relationships/AccountOrganizationGroupRelationship";
-import { USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE } from "./jupiterone/relationships/DeviceUserRelationship";
-import { ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE } from "./jupiterone/relationships/OrganizationGroupAdminRelationship";
+import {
+  ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
+  ACCOUNT_ENTITY_TYPE,
+  ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
+  ADMIN_ENTITY_TYPE,
+  DEVICE_ENTITY_TYPE,
+  DEVICE_USER_ENTITY_TYPE,
+  ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE,
+  ORGANIZATION_GROUP_ENTITY_TYPE,
+  USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE,
+} from "./jupiterone";
 
 jest.mock("./initializeContext");
 
@@ -29,7 +31,6 @@ test("executionHandler", async () => {
       fetchDevices: jest.fn().mockReturnValue([]),
       fetchAdmins: jest.fn().mockReturnValue([]),
       fetchOrganizationGroups: jest.fn().mockReturnValue([]),
-      parseDeviceUsers: jest.fn().mockReturnValue([]),
     },
     account: {
       uuid: "testUuid",
@@ -75,7 +76,6 @@ test("executionHandler", async () => {
   expect(
     executionContext.provider.fetchOrganizationGroups,
   ).toHaveBeenCalledTimes(1);
-  expect(executionContext.provider.parseDeviceUsers).toHaveBeenCalledTimes(1);
 
   expect(executionContext.persister.processEntities).toHaveBeenCalledTimes(5);
   expect(executionContext.persister.processRelationships).toHaveBeenCalledTimes(

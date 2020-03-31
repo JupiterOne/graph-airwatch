@@ -5,7 +5,6 @@ import {
   AirWatchDevice,
   AirWatchOrganizationGroup,
   HttpMethod,
-  AirWatchDeviceUser,
   AirWatchDevicesResponse,
   AirWatchAdminsResponse,
   AirWatchOrganizationGroupsResponse,
@@ -51,23 +50,6 @@ export default class AirwatchClient {
     );
 
     return devices;
-  }
-
-  public parseDeviceUsers(devices: AirWatchDevice[]): AirWatchDeviceUser[] {
-    const users: { [uuid: string]: AirWatchDeviceUser } = {};
-
-    for (const device of devices) {
-      if (!users[device.UserId.Uuid]) {
-        users[device.UserId.Uuid] = {
-          ...device.UserId,
-          Id: {
-            Value: device.Id.Value,
-          },
-        };
-      }
-    }
-
-    return Object.values(users);
   }
 
   public async fetchAdmins(): Promise<AirWatchAdmin[]> {
