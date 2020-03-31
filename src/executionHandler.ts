@@ -1,61 +1,41 @@
-/* eslint-disable @typescript-eslint/await-thenable */
-/* eslint-disable @typescript-eslint/require-await */
-
 import {
+  createIntegrationRelationship,
+  DataModel,
+  EntityFromIntegration,
+  getRawData,
   IntegrationExecutionContext,
   IntegrationExecutionResult,
+  IntegrationRelationship,
 } from "@jupiterone/jupiter-managed-integration-sdk";
 
-import AirwatchClient from "./airwatch/AirwatchClient";
-import { AirWatchAccount, AirWatchDevice } from "./airwatch/types";
 import {
-  createAccountEntity,
-  createAccountRelationships,
-  createAdminEntities,
-  createDeviceEntities,
-  createDeviceUserRelationships,
-  createOrganizationGroupEntities,
-  createOrganizationGroupRelationships,
-  createUserEntities,
-} from "./converters";
+  AirWatchAdmin,
+  AirWatchDevice,
+  AirWatchOrganizationGroup,
+} from "./airwatch/types";
 import initializeContext from "./initializeContext";
 import {
-  ACCOUNT_ENTITY_TYPE,
-  AccountEntity,
-} from "./jupiterone/entities/AccountEntity";
-import {
-  ADMIN_ENTITY_TYPE,
-  AdminEntity,
-} from "./jupiterone/entities/AdminEntity";
-import {
-  DEVICE_ENTITY_TYPE,
-  DeviceEntity,
-} from "./jupiterone/entities/DeviceEntity";
-import {
-  ORGANIZATION_GROUP_ENTITY_TYPE,
-  OrganizationGroupEntity,
-} from "./jupiterone/entities/OrganizationGroupEntity";
-import {
-  DEVICE_USER_ENTITY_TYPE,
-  UserEntity,
-} from "./jupiterone/entities/UserEntity";
-import {
-  ACCOUNT_DEVICE_RELATIONSHIP_CLASS,
   ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
-} from "./jupiterone/relationships/AccountDeviceRelationship";
-import {
-  ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
+  ACCOUNT_ENTITY_TYPE,
   ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
-} from "./jupiterone/relationships/AccountOrganizationGroupRelationship";
-import { USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE } from "./jupiterone/relationships/DeviceUserRelationship";
-import { ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE } from "./jupiterone/relationships/OrganizationGroupAdminRelationship";
+  ADMIN_ENTITY_TYPE,
+  createAccountEntity,
+  createAdminEntity,
+  createDeviceEntity,
+  createOrganizationGroupEntity,
+  createUserEntity,
+  DEVICE_ENTITY_TYPE,
+  DEVICE_USER_ENTITY_TYPE,
+  ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE,
+  ORGANIZATION_GROUP_ENTITY_TYPE,
+  USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE,
+} from "./jupiterone";
 
 export default async function executionHandler(
   context: IntegrationExecutionContext,
 ): Promise<IntegrationExecutionResult> {
   const { graph, persister, provider, account } = initializeContext(context);
 
-  // Get all existing entities from graph
   const [
     oldAccountEntities,
     oldAdminEntities,
@@ -63,20 +43,17 @@ export default async function executionHandler(
     oldDeviceEntities,
     oldUsers,
   ] = await Promise.all([
-    graph.findEntitiesByType<AccountEntity>(ACCOUNT_ENTITY_TYPE),
-    graph.findEntitiesByType<AdminEntity>(ADMIN_ENTITY_TYPE),
-    graph.findEntitiesByType<OrganizationGroupEntity>(
-      ORGANIZATION_GROUP_ENTITY_TYPE,
-    ),
-    graph.findEntitiesByType<DeviceEntity>(DEVICE_ENTITY_TYPE),
-    graph.findEntitiesByType<UserEntity>(DEVICE_USER_ENTITY_TYPE),
+    graph.findEntitiesByType(ACCOUNT_ENTITY_TYPE),
+    graph.findEntitiesByType(ADMIN_ENTITY_TYPE),
+    graph.findEntitiesByType(ORGANIZATION_GROUP_ENTITY_TYPE),
+    graph.findEntitiesByType(DEVICE_ENTITY_TYPE),
+    graph.findEntitiesByType(DEVICE_USER_ENTITY_TYPE),
   ]);
 
-  // Get all existing relationships from graph
   const [
     oldAccountRelationships,
     oldOrganizationGroupRelationships,
-    oldUserDeviceRelationships,
+    oldDeviceUserRelationships,
   ] = await Promise.all([
     graph.findRelationshipsByType([
       ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
@@ -88,112 +65,106 @@ export default async function executionHandler(
     ]),
   ]);
 
-  // Get all new entities from API
-  const newAccountEntities = await fetchAccountEntities(provider, account);
-  const newAdminEntities = await fetchAdminEntitiesFromProvider(provider);
-  const newOrganizationGroupEntities = await fetchOrganizationGroupEntitiesFromProvider(
-    provider,
+  const newOrganizationGroups = await provider.fetchOrganizationGroups();
+  const newAdmins = await provider.fetchAdmins();
+  const newDevices = await provider.fetchDevices();
+
+  const newAccountEntity = createAccountEntity(provider.host, account);
+  const newOrganizationGroupEntities = newOrganizationGroups.map(e =>
+    createOrganizationGroupEntity(provider.host, e),
   );
-  const [newDevices, newDeviceEntities] = await fetchDeviceEntitiesFromProvider(
-    provider,
+  const newAdminEntities = newAdmins.map(e =>
+    createAdminEntity(provider.host, e),
   );
-  const newUsers = parseDeviceUsers(provider, newDevices);
+  const newDeviceEntities = newDevices.map(e =>
+    createDeviceEntity(provider.host, e),
+  );
 
-  const [accountEntity] = newAccountEntities;
-  const newAccountRelationships = [
-    // Account HAS OrganizationGroups
-    ...createAccountRelationships(
-      accountEntity,
-      newOrganizationGroupEntities,
-      ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
-      ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
-    ),
-    // Account MANAGES Devices
-    ...createAccountRelationships(
-      accountEntity,
-      newDeviceEntities,
-      ACCOUNT_DEVICE_RELATIONSHIP_CLASS,
-      ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
-    ),
-  ];
+  const newAccountOrganizationGroupRelationships: IntegrationRelationship[] = [];
+  const newOrganizationGroupAdminRelationships: IntegrationRelationship[] = [];
+  for (const groupEntity of newOrganizationGroupEntities) {
+    newAccountOrganizationGroupRelationships.push(
+      createIntegrationRelationship({
+        _class: DataModel.RelationshipClass.HAS,
+        from: newAccountEntity,
+        to: groupEntity,
+      }),
+    );
 
-  const newOrganizationGroupRelationships = [
-    // OrganizationGroup HAS Admins
-    ...createOrganizationGroupRelationships(
-      newOrganizationGroupEntities,
-      newAdminEntities,
-      ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE,
-    ),
-  ];
+    const group = getRawData(groupEntity) as AirWatchOrganizationGroup;
+    for (const adminEntity of newAdminEntities) {
+      const admin = getRawData(adminEntity) as AirWatchAdmin;
+      if (admin.organizationGroupUuid === group.Uuid) {
+        newOrganizationGroupAdminRelationships.push(
+          createIntegrationRelationship({
+            _class: DataModel.RelationshipClass.HAS,
+            from: groupEntity,
+            to: adminEntity,
+          }),
+        );
+      }
+    }
+  }
 
-  const newUserDeviceRelationships = [
-    // Device HAS Users
-    ...createDeviceUserRelationships(newUsers, newDeviceEntities),
-  ];
+  const newUserEntities: EntityFromIntegration[] = [];
+  const newAccountDeviceRelationships: IntegrationRelationship[] = [];
+  const newDeviceUserRelationships: IntegrationRelationship[] = [];
+  for (const deviceEntity of newDeviceEntities) {
+    newAccountDeviceRelationships.push(
+      createIntegrationRelationship({
+        _class: DataModel.RelationshipClass.MANAGES,
+        from: newAccountEntity,
+        to: deviceEntity,
+      }),
+    );
+
+    const device = getRawData(deviceEntity) as AirWatchDevice;
+    const deviceUser = {
+      ...device.UserId,
+      Id: {
+        Value: device.Id.Value,
+      },
+    };
+
+    const newUserEntity = createUserEntity(provider.host, deviceUser);
+
+    newUserEntities.push(newUserEntity);
+
+    newDeviceUserRelationships.push(
+      createIntegrationRelationship({
+        _class: DataModel.RelationshipClass.HAS,
+        from: deviceEntity,
+        to: newUserEntity,
+      }),
+    );
+  }
 
   return {
     operations: await persister.publishPersisterOperations([
       [
-        ...persister.processEntities(oldAccountEntities, newAccountEntities),
+        ...persister.processEntities(oldAccountEntities, [newAccountEntity]),
         ...persister.processEntities(oldAdminEntities, newAdminEntities),
         ...persister.processEntities(
           oldOrganizationGroupEntities,
           newOrganizationGroupEntities,
         ),
         ...persister.processEntities(oldDeviceEntities, newDeviceEntities),
-        ...persister.processEntities(oldUsers, newUsers),
+        ...persister.processEntities(oldUsers, newUserEntities),
       ],
       [
         ...persister.processRelationships(
           oldAccountRelationships,
-          newAccountRelationships,
+          newAccountOrganizationGroupRelationships,
         ),
         ...persister.processRelationships(
           oldOrganizationGroupRelationships,
-          newOrganizationGroupRelationships,
+          newOrganizationGroupAdminRelationships,
         ),
         ...persister.processRelationships(
-          oldUserDeviceRelationships,
-          newUserDeviceRelationships,
+          oldDeviceUserRelationships,
+          newDeviceUserRelationships,
         ),
       ],
     ]),
   };
-}
-
-async function fetchAccountEntities(
-  provider: AirwatchClient,
-  account: AirWatchAccount,
-): Promise<AccountEntity[]> {
-  return [createAccountEntity(provider.host, account)];
-}
-
-async function fetchOrganizationGroupEntitiesFromProvider(
-  provider: AirwatchClient,
-): Promise<OrganizationGroupEntity[]> {
-  return createOrganizationGroupEntities(
-    provider.host,
-    await provider.fetchOrganizationGroups(),
-  );
-}
-
-async function fetchAdminEntitiesFromProvider(
-  provider: AirwatchClient,
-): Promise<AdminEntity[]> {
-  return createAdminEntities(provider.host, await provider.fetchAdmins());
-}
-
-async function fetchDeviceEntitiesFromProvider(
-  provider: AirwatchClient,
-): Promise<[AirWatchDevice[], DeviceEntity[]]> {
-  const devices = await provider.fetchDevices();
-
-  return [devices, createDeviceEntities(provider.host, devices)];
-}
-
-function parseDeviceUsers(
-  provider: AirwatchClient,
-  devices: AirWatchDevice[],
-): UserEntity[] {
-  return createUserEntities(provider.host, provider.parseDeviceUsers(devices));
 }
