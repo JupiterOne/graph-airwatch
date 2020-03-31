@@ -107,7 +107,6 @@ export default async function executionHandler(
       newOrganizationGroupEntities,
       ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
       ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
-      "has",
     ),
     // Account MANAGES Devices
     ...createAccountRelationships(
@@ -115,7 +114,6 @@ export default async function executionHandler(
       newDeviceEntities,
       ACCOUNT_DEVICE_RELATIONSHIP_CLASS,
       ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
-      "manages",
     ),
   ];
 
