@@ -9,12 +9,11 @@ export function createAccountRelationship(
   entity: EntityFromIntegration,
   clazz: string,
   type: string,
-  modifier: string,
 ): RelationshipFromIntegration {
   return {
     _class: clazz,
     _fromEntityKey: account._key,
-    _key: `${account._key}_${modifier}_${entity._key}`,
+    _key: `${account._key}_${clazz.toLowerCase()}_${entity._key}`,
     _toEntityKey: entity._key,
     _type: type,
   };
@@ -25,12 +24,11 @@ export function createAccountRelationships(
   entities: EntityFromIntegration[],
   clazz: string,
   type: string,
-  modifier: string,
 ): RelationshipFromIntegration[] {
   const relationships = [];
 
   for (const entity of entities) {
-    relationships.push(createAccountRelationship(account, entity, clazz, type, modifier));
+    relationships.push(createAccountRelationship(account, entity, clazz, type));
   }
 
   return relationships;

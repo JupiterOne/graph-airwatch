@@ -5,50 +5,50 @@ import {
   IntegrationExecutionContext,
   IntegrationExecutionResult,
 } from "@jupiterone/jupiter-managed-integration-sdk";
-import {
-  createAccountEntity,
-  createAccountRelationships,
-  createOrganizationGroupEntities,
-  createAdminEntities,
-  createOrganizationGroupRelationships,
-  createDeviceUserRelationships,
-  createDeviceEntities,
-  createUserEntities,
-} from "./converters";
 
-import initializeContext from "./initializeContext";
 import AirwatchClient from "./airwatch/AirwatchClient";
 import { AirWatchAccount, AirWatchDevice } from "./airwatch/types";
 import {
-  AccountEntity,
+  createAccountEntity,
+  createAccountRelationships,
+  createAdminEntities,
+  createDeviceEntities,
+  createDeviceUserRelationships,
+  createOrganizationGroupEntities,
+  createOrganizationGroupRelationships,
+  createUserEntities,
+} from "./converters";
+import initializeContext from "./initializeContext";
+import {
   ACCOUNT_ENTITY_TYPE,
+  AccountEntity,
 } from "./jupiterone/entities/AccountEntity";
 import {
-  AdminEntity,
   ADMIN_ENTITY_TYPE,
+  AdminEntity,
 } from "./jupiterone/entities/AdminEntity";
 import {
-  DeviceEntity,
   DEVICE_ENTITY_TYPE,
+  DeviceEntity,
 } from "./jupiterone/entities/DeviceEntity";
 import {
-  OrganizationGroupEntity,
   ORGANIZATION_GROUP_ENTITY_TYPE,
+  OrganizationGroupEntity,
 } from "./jupiterone/entities/OrganizationGroupEntity";
 import {
-  ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
-  ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
-} from "./jupiterone/relationships/AccountOrganizationGroupRelationship";
-import {
-  ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
-  ACCOUNT_DEVICE_RELATIONSHIP_CLASS,
-} from "./jupiterone/relationships/AccountDeviceRelationship";
-import { ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE } from "./jupiterone/relationships/OrganizationGroupAdminRelationship";
-import {
-  UserEntity,
   DEVICE_USER_ENTITY_TYPE,
+  UserEntity,
 } from "./jupiterone/entities/UserEntity";
-import { USER_DEVICE_RELATIONSHIP_TYPE } from "./jupiterone/relationships/UserDeviceRelationship";
+import {
+  ACCOUNT_DEVICE_RELATIONSHIP_CLASS,
+  ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
+} from "./jupiterone/relationships/AccountDeviceRelationship";
+import {
+  ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
+  ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
+} from "./jupiterone/relationships/AccountOrganizationGroupRelationship";
+import { USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE } from "./jupiterone/relationships/DeviceUserRelationship";
+import { ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE } from "./jupiterone/relationships/OrganizationGroupAdminRelationship";
 
 export default async function executionHandler(
   context: IntegrationExecutionContext,
@@ -83,7 +83,9 @@ export default async function executionHandler(
       ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
     ]),
     graph.findRelationshipsByType([ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE]),
-    graph.findRelationshipsByType([USER_DEVICE_RELATIONSHIP_TYPE]),
+    graph.findRelationshipsByType([
+      USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE,
+    ]),
   ]);
 
   // Get all new entities from API
@@ -105,7 +107,6 @@ export default async function executionHandler(
       newOrganizationGroupEntities,
       ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
       ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
-      "has"
     ),
     // Account MANAGES Devices
     ...createAccountRelationships(
@@ -113,7 +114,6 @@ export default async function executionHandler(
       newDeviceEntities,
       ACCOUNT_DEVICE_RELATIONSHIP_CLASS,
       ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
-      "manages"
     ),
   ];
 
@@ -128,11 +128,7 @@ export default async function executionHandler(
 
   const newUserDeviceRelationships = [
     // Device HAS Users
-    ...createDeviceUserRelationships(
-      newUsers,
-      newDeviceEntities,
-      USER_DEVICE_RELATIONSHIP_TYPE,
-    ),
+    ...createDeviceUserRelationships(newUsers, newDeviceEntities),
   ];
 
   return {
