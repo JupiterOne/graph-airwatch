@@ -69,6 +69,7 @@ const device: AirWatchDevice = {
   WifiSsid: "device.WifiSsid",
   IsSupervised: false,
   Username: "device.Username",
+  HostName: "device.HostName",
 };
 
 const deviceUser: AirWatchDeviceUser = {
@@ -78,6 +79,14 @@ const deviceUser: AirWatchDeviceUser = {
   Uuid: "device.UserId.Uuid",
   Name: "device.UserId.Name",
 };
+
+beforeAll(() => {
+  // process.env.ENABLE_GRAPH_OBJECT_SCHEMA_VALIDATION = "true";
+});
+
+afterAll(() => {
+  delete process.env.ENABLE_GRAPH_OBJECT_SCHEMA_VALIDATION;
+});
 
 describe("createAdminEntity", () => {
   test("all data", () => {
@@ -92,6 +101,7 @@ describe("createAdminEntity", () => {
         },
       ],
       admin: true,
+      name: "admin.firstName admin.lastName",
       displayName: "admin.firstName admin.lastName",
       email: "admin@myairwatch.test",
       firstName: "admin.firstName",
@@ -102,6 +112,7 @@ describe("createAdminEntity", () => {
       webLink: "https://host/AirWatch/#/Admin/List",
     });
   });
+
   test("missing name", () => {
     const adminNoName = {
       ...admin,
@@ -164,6 +175,7 @@ test("createDeviceEntity", () => {
     wifiSsid: "device.WifiSsid",
     isSupervised: false,
     username: "device.Username",
+    hostname: "device.HostName",
   });
 });
 

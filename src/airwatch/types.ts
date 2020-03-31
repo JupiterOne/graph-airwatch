@@ -37,6 +37,7 @@ export interface AirWatchDevice {
   OwnerId: string;
   AssetNumber: string;
   Platform: string;
+  HostName: string;
   Model: string;
   OperatingSystem: string;
   WifiSsid: string;

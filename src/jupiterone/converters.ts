@@ -47,6 +47,11 @@ export function createAdminEntity(
   host: string,
   data: AirWatchAdmin,
 ): EntityFromIntegration {
+  const name =
+    data.firstName && data.lastName
+      ? `${data.firstName} ${data.lastName}`
+      : data.username;
+
   return createIntegrationEntity({
     entityData: {
       source: data,
@@ -55,10 +60,7 @@ export function createAdminEntity(
         _type: ADMIN_ENTITY_TYPE,
         _key: data.uuid,
         ...convertProperties(data),
-        displayName:
-          data.firstName && data.lastName
-            ? `${data.firstName} ${data.lastName}`
-            : data.username,
+        name,
         admin: true,
         webLink: `https://${host}/AirWatch/#/Admin/List`,
       },
@@ -80,6 +82,7 @@ export function createDeviceEntity(
         ...convertProperties(data),
         webLink: `https://${host}/AirWatch/#/AirWatch/Device/Details/Summary/${data.Id.Value}`,
         name: data.DeviceFriendlyName,
+        hostname: data.HostName,
       },
     },
   });
