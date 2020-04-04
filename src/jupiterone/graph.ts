@@ -1,7 +1,4 @@
-import {
-  DataModel,
-  generateRelationshipType,
-} from "@jupiterone/jupiter-managed-integration-sdk";
+import { DataModel, generateRelationshipType } from "@jupiterone/data-model";
 
 // Entities
 

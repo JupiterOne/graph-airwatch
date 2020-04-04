@@ -1,12 +1,14 @@
 import {
-  createIntegrationRelationship,
-  DataModel,
   EntityFromIntegration,
   getRawData,
   IntegrationExecutionContext,
   IntegrationExecutionResult,
   IntegrationRelationship,
 } from "@jupiterone/jupiter-managed-integration-sdk";
+import {
+  createIntegrationRelationship,
+  DataModel,
+} from "@jupiterone/data-model";
 
 import {
   AirWatchAdmin,

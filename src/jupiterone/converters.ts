@@ -1,8 +1,8 @@
+import { EntityFromIntegration } from "@jupiterone/jupiter-managed-integration-sdk";
 import {
   convertProperties,
   createIntegrationEntity,
-  EntityFromIntegration,
-} from "@jupiterone/jupiter-managed-integration-sdk";
+} from "@jupiterone/data-model";
 
 import {
   AirWatchAccount,

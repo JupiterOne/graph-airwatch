@@ -29,6 +29,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@jupiterone/data-model": "^0.1.0",
     "@jupiterone/jupiter-managed-integration-sdk": "^33.6.0",
     "@types/node-fetch": "^2.5.4",
     "aws-sdk": "^2.619.0",
