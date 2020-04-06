@@ -8,6 +8,7 @@ import {
   AirWatchDevicesResponse,
   AirWatchAdminsResponse,
   AirWatchOrganizationGroupsResponse,
+  AirWatchOrganizationGroupChild,
 } from "./types";
 
 export default class AirwatchClient {
@@ -83,7 +84,7 @@ export default class AirwatchClient {
       {},
     );
 
-    const organizationGroups = responses.reduce(
+    const allGroups = responses.reduce(
       (
         acc: AirWatchOrganizationGroup[],
         curr: AirWatchOrganizationGroupsResponse,
@@ -94,13 +95,43 @@ export default class AirwatchClient {
       [],
     );
 
-    return organizationGroups;
+    const groupsWithChildren: AirWatchOrganizationGroup[] = [];
+    for (const group of allGroups) {
+      const directChildren = await this.fetchOrganizationGroupDirectChildren(
+        group.Id,
+      );
+      groupsWithChildren.push({
+        ...group,
+        Children: directChildren,
+      });
+    }
+
+    return groupsWithChildren;
+  }
+
+  /**
+   * Answers the direct children of an Organization group.
+   *
+   * The API answers the complete heirarchy for a group. This returns only the
+   * direct children, assuming the API will be called for each group since they
+   * may not all be related.
+   *
+   * @param groupId the groupId to use when fetching children
+   */
+  public async fetchOrganizationGroupDirectChildren(
+    groupId: number,
+  ): Promise<AirWatchOrganizationGroupChild[]> {
+    const response: AirWatchOrganizationGroupChild[] = await this.makeRequest(
+      `/system/groups/${groupId}/children`,
+      HttpMethod.GET,
+      {},
+    );
+    return response.filter(g => g.ParentLocationGroup.Id.Value === groupId);
   }
 
   private async makeRequest<T>(
     url: string,
     method: HttpMethod,
-    params: {},
     headers?: {},
   ): Promise<T> {
     const options: RequestInit = {
@@ -141,7 +172,6 @@ export default class AirwatchClient {
     url: string,
     method: HttpMethod,
     responseContinuer: (response: T) => boolean,
-    params: {},
     headers?: {},
   ): Promise<T[]> {
     const results: T[] = [];
@@ -152,7 +182,6 @@ export default class AirwatchClient {
       response = await this.makeRequest(
         `${url}?page=${page++}`,
         method,
-        params,
         headers,
       );
 

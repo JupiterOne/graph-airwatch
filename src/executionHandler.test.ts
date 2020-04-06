@@ -11,6 +11,7 @@ import {
   DEVICE_USER_ENTITY_TYPE,
   ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE,
   ORGANIZATION_GROUP_ENTITY_TYPE,
+  ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
   USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE,
 } from "./jupiterone";
 
@@ -68,6 +69,9 @@ test("executionHandler", async () => {
     ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE,
   ]);
   expect(executionContext.graph.findRelationshipsByType).toHaveBeenCalledWith([
+    ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
+  ]);
+  expect(executionContext.graph.findRelationshipsByType).toHaveBeenCalledWith([
     USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE,
   ]);
 
@@ -79,7 +83,7 @@ test("executionHandler", async () => {
 
   expect(executionContext.persister.processEntities).toHaveBeenCalledTimes(5);
   expect(executionContext.persister.processRelationships).toHaveBeenCalledTimes(
-    3,
+    4,
   );
   expect(
     executionContext.persister.publishPersisterOperations,

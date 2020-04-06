@@ -63,6 +63,37 @@ export interface AirWatchOrganizationGroup {
   Country: string;
   WebLink: string;
   CreatedOn: string;
+
+  /**
+   * Organization groups that refer to this group as their
+   * `ParentLocationGroup`. Useful for building relationships of groups within
+   * groups.
+   */
+  Children?: AirWatchOrganizationGroupChild[];
+}
+
+// /system/groups/{id}/children
+export interface AirWatchOrganizationGroupChild {
+  Name: string;
+  GroupId: string;
+  LocationGroupType: string;
+  Country: string;
+  Locale: string;
+  ParentLocationGroup: {
+    Id: {
+      Value: number;
+    };
+    Uuid: string;
+  };
+  CreatedOn: string;
+  LgLevel: number;
+  Users: string; // number
+  Admins: string; // number
+  Devices: string; // number
+  Id: {
+    Value: number;
+  };
+  Uuid: string;
 }
 
 export interface Pageable {
