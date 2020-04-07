@@ -1,6 +1,5 @@
 import {
   createIntegrationRelationship,
-  DataModel,
   EntityFromIntegration,
   getRawData,
   IntegrationExecutionContext,
@@ -15,8 +14,10 @@ import {
 } from "./airwatch/types";
 import initializeContext from "./initializeContext";
 import {
+  ACCOUNT_DEVICE_RELATIONSHIP_CLASS,
   ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
   ACCOUNT_ENTITY_TYPE,
+  ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
   ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
   ADMIN_ENTITY_TYPE,
   createAccountEntity,
@@ -26,15 +27,21 @@ import {
   createUserEntity,
   DEVICE_ENTITY_TYPE,
   DEVICE_USER_ENTITY_TYPE,
+  ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_CLASS,
   ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE,
   ORGANIZATION_GROUP_ENTITY_TYPE,
+  ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
+  ORGANIZATION_GROUP_RELATIONSHIP_TYPE,
+  USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_CLASS,
   USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE,
 } from "./jupiterone";
 
 export default async function executionHandler(
   context: IntegrationExecutionContext,
 ): Promise<IntegrationExecutionResult> {
-  const { graph, persister, provider, account } = initializeContext(context);
+  const { graph, logger, persister, provider, account } = initializeContext(
+    context,
+  );
 
   const [
     oldAccountEntities,
@@ -52,6 +59,7 @@ export default async function executionHandler(
 
   const [
     oldAccountRelationships,
+    oldOrganizationGroupAdminRelationships,
     oldOrganizationGroupRelationships,
     oldDeviceUserRelationships,
   ] = await Promise.all([
@@ -60,6 +68,7 @@ export default async function executionHandler(
       ACCOUNT_DEVICE_RELATIONSHIP_TYPE,
     ]),
     graph.findRelationshipsByType([ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_TYPE]),
+    graph.findRelationshipsByType([ORGANIZATION_GROUP_RELATIONSHIP_TYPE]),
     graph.findRelationshipsByType([
       USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_TYPE,
     ]),
@@ -82,10 +91,12 @@ export default async function executionHandler(
 
   const newAccountOrganizationGroupRelationships: IntegrationRelationship[] = [];
   const newOrganizationGroupAdminRelationships: IntegrationRelationship[] = [];
+  const newOrganizationGroupRelationships: IntegrationRelationship[] = [];
+
   for (const groupEntity of newOrganizationGroupEntities) {
     newAccountOrganizationGroupRelationships.push(
       createIntegrationRelationship({
-        _class: DataModel.RelationshipClass.HAS,
+        _class: ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
         from: newAccountEntity,
         to: groupEntity,
       }),
@@ -97,11 +108,41 @@ export default async function executionHandler(
       if (admin.organizationGroupUuid === group.Uuid) {
         newOrganizationGroupAdminRelationships.push(
           createIntegrationRelationship({
-            _class: DataModel.RelationshipClass.HAS,
+            _class: ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_CLASS,
             from: groupEntity,
             to: adminEntity,
           }),
         );
+      }
+    }
+
+    if (group.Children) {
+      for (const childGroup of group.Children) {
+        const childGroupEntity = newOrganizationGroupEntities.find(
+          e => e._key === childGroup.Uuid,
+        );
+
+        if (childGroupEntity) {
+          newOrganizationGroupRelationships.push(
+            createIntegrationRelationship({
+              _class: ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
+              from: groupEntity,
+              to: childGroupEntity,
+            }),
+          );
+        } else {
+          logger.warn(
+            {
+              group: { id: group.Id, uuid: group.Uuid, name: group.Name },
+              child: {
+                id: childGroup.Id.Value,
+                uuid: childGroup.Uuid,
+                name: childGroup.Name,
+              },
+            },
+            "Group refers to child group that was not found",
+          );
+        }
       }
     }
   }
@@ -112,7 +153,7 @@ export default async function executionHandler(
   for (const deviceEntity of newDeviceEntities) {
     newAccountDeviceRelationships.push(
       createIntegrationRelationship({
-        _class: DataModel.RelationshipClass.MANAGES,
+        _class: ACCOUNT_DEVICE_RELATIONSHIP_CLASS,
         from: newAccountEntity,
         to: deviceEntity,
       }),
@@ -132,7 +173,7 @@ export default async function executionHandler(
 
     newDeviceUserRelationships.push(
       createIntegrationRelationship({
-        _class: DataModel.RelationshipClass.HAS,
+        _class: USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_CLASS,
         from: deviceEntity,
         to: newUserEntity,
       }),
@@ -157,8 +198,12 @@ export default async function executionHandler(
           newAccountOrganizationGroupRelationships,
         ),
         ...persister.processRelationships(
-          oldOrganizationGroupRelationships,
+          oldOrganizationGroupAdminRelationships,
           newOrganizationGroupAdminRelationships,
+        ),
+        ...persister.processRelationships(
+          oldOrganizationGroupRelationships,
+          newOrganizationGroupRelationships,
         ),
         ...persister.processRelationships(
           oldDeviceUserRelationships,
