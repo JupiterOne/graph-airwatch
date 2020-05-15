@@ -977,10 +977,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@jupiterone/jupiter-managed-integration-sdk@^33.6.0":
-  version "33.6.0"
-  resolved "https://registry.yarnpkg.com/@jupiterone/jupiter-managed-integration-sdk/-/jupiter-managed-integration-sdk-33.6.0.tgz#dc25f4027caaf48f5ebf3273dbd352207e3cb8e5"
-  integrity sha512-XieN0SfewsASY1UpQm8U8KZvZhR+CUx3Y/50JeDyiGbA6I7iVtiuUIhewr+eIbrnlh0gBC/OQFSTq4KiS7oJQw==
+"@jupiterone/jupiter-managed-integration-sdk@^33.7.5":
+  version "33.7.5"
+  resolved "https://registry.yarnpkg.com/@jupiterone/jupiter-managed-integration-sdk/-/jupiter-managed-integration-sdk-33.7.5.tgz#6bdc15e6192c954952e6063203d189c2e7106d53"
+  integrity sha512-B4AN/GyBqXsc8jv/vjUoCja46AAVeS+FX49WOXjpf4rknfNqwieUHvo0Jgx8w+KVB1bcnDkQk35Uw5cTw980Ig==
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
