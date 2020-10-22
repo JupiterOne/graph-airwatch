@@ -56,7 +56,7 @@ const device: AirWatchDevice = {
     Name: 'device.UserId.Name',
   },
   AssetNumber: 'device.AssetNumber',
-  Platform: 'device.Platform',
+  Platform: 'Android',
   Model: 'device.Model',
   OperatingSystem: 'device.OperatingSystem',
   WifiSsid: 'device.WifiSsid',
@@ -73,14 +73,6 @@ const deviceUser: AirWatchDeviceUser = {
   Uuid: 'device.UserId.Uuid',
   Name: 'device.UserId.Name',
 };
-
-beforeAll(() => {
-  // process.env.ENABLE_GRAPH_OBJECT_SCHEMA_VALIDATION = "true";
-});
-
-afterAll(() => {
-  delete process.env.ENABLE_GRAPH_OBJECT_SCHEMA_VALIDATION;
-});
 
 describe('createAdminEntity', () => {
   test('all data', () => {
@@ -150,7 +142,7 @@ test('createDeviceEntity', () => {
     ownerId: 'device.UserId.Uuid',
     name: 'device.DeviceFriendlyName',
     assetNumber: 'device.AssetNumber',
-    platform: 'device.Platform',
+    platform: 'android',
     model: 'device.Model',
     operatingSystem: 'device.OperatingSystem',
     webLink: 'https://host/AirWatch/#/AirWatch/Device/Details/Summary/123',

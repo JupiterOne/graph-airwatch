@@ -751,7 +751,7 @@ Object {
       "osBuildVersion": "",
       "ownership": "C",
       "phoneNumber": "",
-      "platform": "Android",
+      "platform": "android",
       "processorArchitecture": 0,
       "serialNumber": "R58MB3K5VWH",
       "systemIntegrityProtectionEnabled": false,

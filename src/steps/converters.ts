@@ -58,6 +58,7 @@ export function createDeviceEntity(host: string, data: AirWatchDevice): Entity {
         name: data.DeviceFriendlyName,
         hostname: data.HostName,
         complianceStatus: data.ComplianceStatus === 'Compliant' ? 1 : undefined,
+        platform: String(data.Platform).toLowerCase(),
       },
     },
   });
