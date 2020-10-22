@@ -158,7 +158,7 @@ test('createDeviceEntity', () => {
     isSupervised: false,
     username: 'device.Username',
     hostname: 'device.HostName',
-    complianceStatus: 100,
+    complianceStatus: 1,
   });
 });
 

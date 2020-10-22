@@ -57,8 +57,7 @@ export function createDeviceEntity(host: string, data: AirWatchDevice): Entity {
         webLink: `https://${host}/AirWatch/#/AirWatch/Device/Details/Summary/${data.Id.Value}`,
         name: data.DeviceFriendlyName,
         hostname: data.HostName,
-        complianceStatus:
-          data.ComplianceStatus === 'Compliant' ? 100 : undefined,
+        complianceStatus: data.ComplianceStatus === 'Compliant' ? 1 : undefined,
       },
     },
   });
