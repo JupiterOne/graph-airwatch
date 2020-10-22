@@ -1,16 +1,11 @@
 export type AirWatchClientConfig = {
-  airwatchApiKey: string,
-  airwatchUsername: string,
-  airwatchPassword: string,
-  airwatchHost: string,
-}
+  airwatchApiKey: string;
+  airwatchUsername: string;
+  airwatchPassword: string;
+  airwatchHost: string;
+};
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
-
-export enum HttpMethod {
-  GET = "get",
-  POST = "post",
-}
 
 export interface AirWatchUser {
   uuid: string;
@@ -56,7 +51,7 @@ export interface AirWatchDevice {
     Uuid: string;
     Name: string;
   };
-  ComplianceStatus?: string
+  ComplianceStatus?: string;
 }
 
 export interface AirWatchOrganizationGroup {
@@ -109,12 +104,15 @@ export interface Pageable {
 
 export interface AirWatchAdminsResponse extends Pageable {
   admins: AirWatchAdmin[];
+  Total: number;
 }
 
 export interface AirWatchDevicesResponse extends Pageable {
   Devices: AirWatchDevice[];
+  Total: number;
 }
 
 export interface AirWatchOrganizationGroupsResponse {
   OrganizationGroups: AirWatchOrganizationGroup[];
+  TotalResults: number;
 }

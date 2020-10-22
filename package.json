@@ -30,7 +30,8 @@
   "devDependencies": {
     "@jupiterone/integration-sdk-core": "^3.6.0",
     "@jupiterone/integration-sdk-dev-tools": "^3.6.0",
-    "@jupiterone/integration-sdk-testing": "^3.6.0"
+    "@jupiterone/integration-sdk-testing": "^3.6.0",
+    "@types/node-fetch": "^2.5.7"
   },
   "dependencies": {
     "moment": "^2.29.1",

@@ -333,7 +333,7 @@ Object {
         Object {
           "name": "default",
           "rawData": Object {
-            "LastLoginTimeStamp": "2020-10-22T01:02:21.973",
+            "LastLoginTimeStamp": "2020-10-22T13:29:34.120",
             "LocationGroup": "M605431073",
             "LocationGroupId": "8366",
             "email": "adam.williams@jupiterone.com",
@@ -368,7 +368,7 @@ Object {
       "email": "adam.williams@jupiterone.com",
       "firstName": "Adam",
       "initialLandingPage": "/Device/Dashboard",
-      "lastLoginTimeStamp": "2020-10-22T01:02:21.973",
+      "lastLoginTimeStamp": "2020-10-22T13:29:34.120",
       "lastName": "Williams",
       "locale": "en-US",
       "locationGroup": "M605431073",
@@ -449,10 +449,10 @@ Object {
         Object {
           "name": "default",
           "rawData": Object {
-            "LastLoginTimeStamp": "2020-10-22T02:11:02.823",
+            "LastLoginTimeStamp": "2020-10-22T19:26:56.443",
             "LocationGroup": "M605431073",
             "LocationGroupId": "8366",
-            "email": "j1dev@lifeomic.com",
+            "email": "development@jupiterone.com",
             "firstName": "JupiterOne",
             "initialLandingPage": "/Device/Dashboard",
             "lastName": "Development",
@@ -481,10 +481,10 @@ Object {
       "admin": true,
       "createdOn": undefined,
       "displayName": "JupiterOne Development",
-      "email": "j1dev@lifeomic.com",
+      "email": "development@jupiterone.com",
       "firstName": "JupiterOne",
       "initialLandingPage": "/Device/Dashboard",
-      "lastLoginTimeStamp": "2020-10-22T02:11:02.823",
+      "lastLoginTimeStamp": "2020-10-22T19:26:56.443",
       "lastName": "Development",
       "locale": "en-US",
       "locationGroup": "M605431073",

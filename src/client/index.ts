@@ -1,4 +1,4 @@
-import fetch, { RequestInit, Response } from 'node-fetch';
+import fetch from 'node-fetch';
 
 import {
   IntegrationProviderAPIError,
@@ -14,7 +14,6 @@ import {
   AirWatchOrganizationGroup,
   AirWatchOrganizationGroupChild,
   AirWatchOrganizationGroupsResponse,
-  HttpMethod,
   ResourceIteratee,
 } from './types';
 
@@ -33,8 +32,8 @@ export function createAPIClient(config: AirWatchClientConfig): AirWatchClient {
 export default class AirWatchClient {
   private readonly _host: string;
   private readonly username: string;
-  private readonly password: string;
   private readonly apiKey: string;
+  private readonly authorization: string;
 
   constructor(
     host: string,
@@ -44,8 +43,12 @@ export default class AirWatchClient {
   ) {
     this._host = host;
     this.username = username;
-    this.password = password;
     this.apiKey = apiKey;
+
+    const encodedAuth = Buffer.from(`${username}:${password}`).toString(
+      'base64',
+    );
+    this.authorization = `Basic ${encodedAuth}`;
   }
 
   public get host(): string {
@@ -53,20 +56,9 @@ export default class AirWatchClient {
   }
 
   public async verifyAuthentication(): Promise<void> {
-    try {
-      await this.makeRequest<AirWatchAdminsResponse>(
-        `/system/admins/search?username=${encodeURIComponent(
-          this.username,
-        )}&pagesize=1`,
-      );
-    } catch (err) {
-      throw new IntegrationProviderAuthenticationError({
-        cause: err,
-        endpoint: err.endpoint,
-        status: err.status,
-        statusText: err.statusText,
-      });
-    }
+    await this.makeRequest<AirWatchAdminsResponse>(
+      `/system/admins/search?username=${encodeURIComponent(this.username)}`,
+    );
   }
 
   public async iterateDevices(
@@ -79,12 +71,10 @@ export default class AirWatchClient {
         `/mdm/devices/search?page=${page++}`,
       );
 
-      if (response) {
-        for (const device of response?.Devices || []) {
-          await iteratee(device);
-        }
+      for (const device of response.Devices) {
+        await iteratee(device);
       }
-    } while (response?.Devices?.length > 0);
+    } while (response.Devices.length < response.Total);
   }
 
   public async iterateAdmins(
@@ -97,12 +87,10 @@ export default class AirWatchClient {
         `/system/admins/search?page=${page++}`,
       );
 
-      if (response) {
-        for (const admin of response?.admins || []) {
-          await iteratee(admin);
-        }
+      for (const admin of response.admins) {
+        await iteratee(admin);
       }
-    } while (response?.admins?.length > 0);
+    } while (response.admins.length < response.Total);
   }
 
   public async iterateOrganizationGroups(
@@ -115,19 +103,17 @@ export default class AirWatchClient {
         `/system/groups/search?page=${page++}`,
       );
 
-      if (response) {
-        for (const group of response?.OrganizationGroups || []) {
-          const directChildren = await this.fetchOrganizationGroupDirectChildren(
-            group.Id,
-          );
+      for (const group of response.OrganizationGroups) {
+        const directChildren = await this.fetchOrganizationGroupDirectChildren(
+          group.Id,
+        );
 
-          await iteratee({
-            ...group,
-            Children: directChildren,
-          });
-        }
+        await iteratee({
+          ...group,
+          Children: directChildren,
+        });
       }
-    } while (response?.OrganizationGroups?.length > 0);
+    } while (response.OrganizationGroups.length < response.TotalResults);
   }
 
   /**
@@ -148,40 +134,43 @@ export default class AirWatchClient {
     return response.filter((g) => g.ParentLocationGroup.Id.Value === groupId);
   }
 
-  private async makeRequest<T>(
-    path: string,
-    method: HttpMethod = HttpMethod.GET,
-    headers: {} = {},
-  ): Promise<T> {
-    const url = `https://${this._host}/api${path}`;
-    const options: RequestInit = {
-      method,
+  private async makeRequest<T>(path: string): Promise<T> {
+    const url = `https://${this._host}/API${path}`;
+    const response = await fetch(url, {
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json;version=2',
-        Authorization: `Basic ${Buffer.from(
-          this.username + ':' + this.password,
-        ).toString('base64')}`,
+        Authorization: this.authorization,
         'aw-tenant-code': this.apiKey,
-        ...headers,
+        Accept: 'application/json;version=2',
       },
-    };
+    });
 
-    const response: Response | undefined = await fetch(url, options);
+    const body = await response.text();
+    const bodyJson = body.length > 0 && JSON.parse(body);
 
-    if (!response) {
-      throw new Error(`No response from '${url}'`);
-    }
-
-    if (response.status.toString().startsWith('2')) {
-      const responseBody: string = await response.text();
-      return responseBody.length > 0 ? JSON.parse(responseBody) : {};
+    if (response.status >= 200 && response.status < 300) {
+      return bodyJson || {};
     } else {
-      throw new IntegrationProviderAPIError({
-        endpoint: url,
-        status: response.status,
-        statusText: response.statusText,
-      });
+      let cause: Error | undefined = undefined;
+      if (bodyJson?.errorCode) {
+        cause = new Error(`${bodyJson.message} (${bodyJson.errorCode})`);
+      }
+
+      if (response.status === 401) {
+        throw new IntegrationProviderAuthenticationError({
+          cause,
+          endpoint: url,
+          status: response.status,
+          statusText: response.statusText,
+        });
+      } else {
+        throw new IntegrationProviderAPIError({
+          cause,
+          endpoint: url,
+          status: response.status,
+          statusText: response.statusText,
+        });
+      }
     }
   }
 }

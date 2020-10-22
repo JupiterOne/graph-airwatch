@@ -5,6 +5,7 @@ import {
 
 import { setupAirWatchRecording } from '../../test/recording';
 import { IntegrationConfig } from '../types';
+import validateInvocation from '../validateInvocation';
 import { fetchAdmins, fetchOrganizationGroups } from './access';
 import { fetchAccountDetails } from './account';
 import { fetchDevices } from './devices';
@@ -34,6 +35,7 @@ test('should collect data', async () => {
 
   // Simulates dependency graph execution.
   // See https://github.com/JupiterOne/sdk/issues/262.
+  await validateInvocation(context);
   await fetchAccountDetails(context);
   await fetchOrganizationGroups(context);
   await fetchAdmins(context);
