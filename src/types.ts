@@ -1,15 +1,12 @@
-import {
-  GraphClient,
-  IntegrationExecutionContext,
-  PersisterClient,
-} from "@jupiterone/jupiter-managed-integration-sdk";
+import { IntegrationInstanceConfig } from '@jupiterone/integration-sdk-core';
 
-import AirwatchClient from "./airwatch/AirwatchClient";
-import { AirWatchAccount } from "./airwatch/types";
-
-export interface AirwatchExecutionContext extends IntegrationExecutionContext {
-  graph: GraphClient;
-  persister: PersisterClient;
-  provider: AirwatchClient;
-  account: AirWatchAccount;
+/**
+ * Properties provided by the `IntegrationInstance.config`. This reflects the
+ * same properties defined by `instanceConfigFields`.
+ */
+export interface IntegrationConfig extends IntegrationInstanceConfig {
+  airwatchApiKey: string,
+  airwatchUsername: string,
+  airwatchPassword: string,
+  airwatchHost: string,
 }
