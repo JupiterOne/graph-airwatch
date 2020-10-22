@@ -63,6 +63,7 @@ const device: AirWatchDevice = {
   IsSupervised: false,
   Username: 'device.Username',
   HostName: 'device.HostName',
+  ComplianceStatus: 'Compliant',
 };
 
 const deviceUser: AirWatchDeviceUser = {
@@ -157,6 +158,7 @@ test('createDeviceEntity', () => {
     isSupervised: false,
     username: 'device.Username',
     hostname: 'device.HostName',
+    complianceStatus: 100,
   });
 });
 

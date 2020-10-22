@@ -56,6 +56,7 @@ export interface AirWatchDevice {
     Uuid: string;
     Name: string;
   };
+  ComplianceStatus?: string
 }
 
 export interface AirWatchOrganizationGroup {

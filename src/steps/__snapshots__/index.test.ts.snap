@@ -717,7 +717,7 @@ Object {
       "assetNumber": "01b37d064f07386e51b787ea9fb672b2f318db0be9",
       "availablePhysicalMemory": 0,
       "batteryLevel": "",
-      "complianceStatus": "Compliant",
+      "complianceStatus": 100,
       "compromisedStatus": false,
       "createdOn": undefined,
       "dataProtectionStatus": 0,
