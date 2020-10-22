@@ -59,6 +59,9 @@ export function createDeviceEntity(host: string, data: AirWatchDevice): Entity {
         hostname: data.HostName,
         complianceStatus: data.ComplianceStatus === 'Compliant' ? 1 : undefined,
         platform: String(data.Platform).toLowerCase(),
+        make: data.Model,
+        serial: data.SerialNumber,
+        category: 'endpoint',
       },
     },
   });
@@ -96,6 +99,7 @@ export function createUserEntity(
         _type: DEVICE_USER_ENTITY_TYPE,
         _key: data.Uuid,
         ...convertProperties(data),
+        username: data.Name,
         webLink: `https://${host}/AirWatch/#/AirWatch/User/Details/Summary/${data.Id.Value}`,
       },
     },

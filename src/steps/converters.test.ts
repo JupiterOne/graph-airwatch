@@ -136,6 +136,7 @@ test('createDeviceEntity', () => {
       },
     ],
     uuid: 'device.Uuid',
+    serial: 'device.SerialNumber',
     serialNumber: 'device.SerialNumber',
     macAddress: 'dvice.MacAddress',
     imei: 'device.Imei',
@@ -144,6 +145,7 @@ test('createDeviceEntity', () => {
     assetNumber: 'device.AssetNumber',
     platform: 'android',
     model: 'device.Model',
+    make: 'device.Model',
     operatingSystem: 'device.OperatingSystem',
     webLink: 'https://host/AirWatch/#/AirWatch/Device/Details/Summary/123',
     wifiSsid: 'device.WifiSsid',
@@ -151,6 +153,7 @@ test('createDeviceEntity', () => {
     username: 'device.Username',
     hostname: 'device.HostName',
     complianceStatus: 1,
+    category: 'endpoint',
   });
 });
 
@@ -192,6 +195,7 @@ test('createUserEntity', () => {
       },
     ],
     name: 'device.UserId.Name',
+    username: 'device.UserId.Name',
     uuid: 'device.UserId.Uuid',
     webLink: 'https://host/AirWatch/#/AirWatch/User/Details/Summary/123',
   });
