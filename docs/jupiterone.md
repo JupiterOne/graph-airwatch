@@ -2,21 +2,21 @@
 
 ## Setup
 
-In this section, please provide details about how to set up the integration with
-JupiterOne. This may require provisioning some resources on the provider's side
-(perhaps a role, app, or api key) and passing information over to JupiterOne.
+After logging into VMWare AirWatch (Workspace ONE™️ UEM), create an
+Administrator user account for the integration to authenticate with the REST
+API.
 
-## Data Model
+1. Select **Accounts** > **Administrators** > **List View**.
 
-Provide an overview here of the resources collected from the integration. Please
-provide a mapping of how the resources collected map to the JupiterOne Data
-Model. The tables below were taken from the Azure integration to provide an
-example of how to display that information.
+2. Press the **Add** > **Add Admin**" button and provide required details. It is
+   _recommended_ that you set values representing JupiterOne as a system user
+   account. It is _important_ that you set _Title_ on the _Details_ tab to
+   "system" so that JupiterOne understands this is a user for automation (it
+   will not attempt to map to a Person entity).
 
-When you start developing an integration, please clear out the tables below. As
-you add support for new entities and relationships, please update the tables and
-document the addition in the [CHANGELOG.md](../CHANGELOG.md) file at the root of
-the project.
+3. Once the account is created, navigate to **Groups & Settings** > **All
+   Settings** > **System** > **Advanced** > **API** > **REST API**" and click
+   **Add** to create a new API key.
 
 <!-- {J1_DOCUMENTATION_MARKER_START} -->
 <!--
