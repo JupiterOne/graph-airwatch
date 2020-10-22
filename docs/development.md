@@ -16,9 +16,30 @@ don't bother documenting that here.
 
 ## Provider account setup
 
-Please provide information about the steps needed to create an account with a
-provider. Images and references to a provider's documentation is very helpful
-for new developers picking up your work.
+After logging into VMWare AirWatch (Workspace ONE™️ UEM), create an
+Administrator user account for the integration to authenticate with the REST
+API.
+
+1. Select **Accounts** > **Administrators** > **List View**.
+
+2. Press the **Add** > **Add Admin**" button and provide required details. It is
+   _recommended_ that you set values representing JupiterOne as a system user
+   account. It is _important_ that you set _Title_ on the _Details_ tab to
+   "system" so that JupiterOne understands this is a user for automation (it
+   will not attempt to map to a Person entity).
+
+3. Once the account is created, navigate to **Groups & Settings** > **All
+   Settings** > **System** > **Advanced** > **API** > **REST API**" and click
+   **Add** to create a new API key.
+
+Configure the `.env` file to contain:
+
+```
+AIRWATCH_HOST='<your>.awmdm.com'
+AIRWATCH_USERNAME='<username>'
+AIRWATCH_PASSWORD='<password>'
+AIRWATCH_API_KEY='<api key>'
+```
 
 ## Authentication
 
