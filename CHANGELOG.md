@@ -8,6 +8,11 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Creating device user entity & relationship failed when the device does not
+  have an associated user
+
 ## 0.3.0 2020-10-22
 
 ### Changed
