@@ -1,37 +1,12 @@
-import { IntegrationInvocationConfig } from "@jupiterone/jupiter-managed-integration-sdk";
+import { IntegrationInvocationConfig } from '@jupiterone/integration-sdk-core';
 
-import executionHandler from "./executionHandler";
-import invocationValidator from "./invocationValidator";
+import instanceConfigFields from './instanceConfigFields';
+import { integrationSteps } from './steps';
+import { IntegrationConfig } from './types';
+import validateInvocation from './validateInvocation';
 
-export const invocationConfig: IntegrationInvocationConfig = {
-  instanceConfigFields: {
-    airwatchApiKey: {
-      type: "string",
-      mask: true,
-    },
-    airwatchUsername: {
-      type: "string",
-    },
-    airwatchPassword: {
-      type: "string",
-      mask: true,
-    },
-    airwatchHost: {
-      type: "string",
-    },
-  },
-
-  invocationValidator,
-
-  integrationStepPhases: [
-    {
-      steps: [
-        {
-          id: "synchronize",
-          name: "Synchronize",
-          executionHandler,
-        },
-      ],
-    },
-  ],
+export const invocationConfig: IntegrationInvocationConfig<IntegrationConfig> = {
+  instanceConfigFields,
+  validateInvocation,
+  integrationSteps,
 };
