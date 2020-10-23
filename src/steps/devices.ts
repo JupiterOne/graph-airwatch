@@ -6,6 +6,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 
 import { createAPIClient } from '../client';
+import { AirWatchDeviceUser } from '../client/types';
 import { IntegrationConfig } from '../types';
 import {
   ACCOUNT_DEVICE_RELATIONSHIP_CLASS,
@@ -38,24 +39,27 @@ export async function fetchDevices({
       }),
     );
 
-    // TODO: We need more data for the user
-    const deviceUser = {
-      ...device.UserId,
-      Id: {
-        Value: device.Id.Value,
-      },
-    };
+    if (device.UserId?.Uuid) {
+      // TODO: We need more data for the user
+      const deviceUser: AirWatchDeviceUser = {
+        Name: device.UserId.Name,
+        Uuid: device.UserId.Uuid,
+        Id: {
+          Value: device.Id.Value,
+        },
+      };
 
-    const newUserEntity = await jobState.addEntity(
-      createUserEntity(apiClient.host, deviceUser),
-    );
-    await jobState.addRelationship(
-      createDirectRelationship({
-        _class: USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_CLASS,
-        from: deviceEntity,
-        to: newUserEntity,
-      }),
-    );
+      const newUserEntity = await jobState.addEntity(
+        createUserEntity(apiClient.host, deviceUser),
+      );
+      await jobState.addRelationship(
+        createDirectRelationship({
+          _class: USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_CLASS,
+          from: deviceEntity,
+          to: newUserEntity,
+        }),
+      );
+    }
   });
 }
 
