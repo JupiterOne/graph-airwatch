@@ -21,44 +21,60 @@ import { createDeviceEntity, createUserEntity } from './converters';
 export const ACCOUNT_ENTITY_KEY = 'entity:account';
 
 export async function fetchDevices({
+  logger,
   instance,
   jobState,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
   const accountEntity = (await jobState.getData(ACCOUNT_ENTITY_KEY)) as Entity;
 
+  const seenUuids = new Set<string>();
   await apiClient.iterateDevices(async (device) => {
-    const deviceEntity = await jobState.addEntity(
-      createDeviceEntity(apiClient.host, device),
-    );
-    await jobState.addRelationship(
-      createDirectRelationship({
-        _class: ACCOUNT_DEVICE_RELATIONSHIP_CLASS,
-        from: accountEntity,
-        to: deviceEntity,
-      }),
-    );
+    if (!device.Uuid) {
+      logger.warn(
+        { device },
+        'Uuid property is undefined, types indicate it will always be defined',
+      );
+    } else if (seenUuids.has(device.Uuid)) {
+      logger.warn(
+        { device },
+        'Device.Uuid seen before, iterateDevices may be seeing duplicates',
+      );
+    } else {
+      seenUuids.add(device.Uuid);
 
-    if (device.UserId?.Uuid) {
-      // TODO: We need more data for the user
-      const deviceUser: AirWatchDeviceUser = {
-        Name: device.UserId.Name,
-        Uuid: device.UserId.Uuid,
-        Id: {
-          Value: device.Id.Value,
-        },
-      };
-
-      const newUserEntity = await jobState.addEntity(
-        createUserEntity(apiClient.host, deviceUser),
+      const deviceEntity = await jobState.addEntity(
+        createDeviceEntity(apiClient.host, device),
       );
       await jobState.addRelationship(
         createDirectRelationship({
-          _class: USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_CLASS,
-          from: deviceEntity,
-          to: newUserEntity,
+          _class: ACCOUNT_DEVICE_RELATIONSHIP_CLASS,
+          from: accountEntity,
+          to: deviceEntity,
         }),
       );
+
+      if (device.UserId?.Uuid) {
+        // TODO: We need more data for the user
+        const deviceUser: AirWatchDeviceUser = {
+          Name: device.UserId.Name,
+          Uuid: device.UserId.Uuid,
+          Id: {
+            Value: device.Id.Value,
+          },
+        };
+
+        const newUserEntity = await jobState.addEntity(
+          createUserEntity(apiClient.host, deviceUser),
+        );
+        await jobState.addRelationship(
+          createDirectRelationship({
+            _class: USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_CLASS,
+            from: deviceEntity,
+            to: newUserEntity,
+          }),
+        );
+      }
     }
   });
 }
