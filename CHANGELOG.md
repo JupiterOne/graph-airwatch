@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- Handle duplicate `Device._key` and add logging to support debugging
+
 ## 0.3.1 2020-10-23
 
 ### Fixed
