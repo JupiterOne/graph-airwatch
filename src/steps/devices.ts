@@ -3,6 +3,7 @@ import {
   Entity,
   IntegrationStep,
   IntegrationStepExecutionContext,
+  JobState,
 } from '@jupiterone/integration-sdk-core';
 
 import { createAPIClient } from '../client';
@@ -64,19 +65,32 @@ export async function fetchDevices({
           },
         };
 
-        const newUserEntity = await jobState.addEntity(
-          createUserEntity(apiClient.host, deviceUser),
+        const userEntity = await findOrCreateUser(
+          apiClient.host,
+          jobState,
+          deviceUser,
         );
+
         await jobState.addRelationship(
           createDirectRelationship({
             _class: USER_ENDPOINT_DEVICE_USER_RELATIONSHIP_CLASS,
             from: deviceEntity,
-            to: newUserEntity,
+            to: userEntity,
           }),
         );
       }
     }
   });
+}
+
+async function findOrCreateUser(
+  host: string,
+  jobState: JobState,
+  deviceUser: AirWatchDeviceUser,
+): Promise<Entity> {
+  const user = await jobState.findEntity(deviceUser.Uuid);
+  if (user) return user;
+  return jobState.addEntity(createUserEntity(host, deviceUser));
 }
 
 export const devicesSteps: IntegrationStep<IntegrationConfig>[] = [
