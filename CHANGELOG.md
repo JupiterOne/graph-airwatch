@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.3.3 2020-10-27
+
 - Handle duplicate device `User._key`
 
 ## 0.3.2 2020-10-26
