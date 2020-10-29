@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.4.0 2020-10-29
+
+- Upgrade SDK v4
+
 ## 0.3.3 2020-10-27
 
 - Handle duplicate device `User._key`
