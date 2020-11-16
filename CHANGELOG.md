@@ -8,10 +8,6 @@ and this project adheres to
 
 ## [Unreleased]
 
-## 0.4.1 2020-10-29
-
-- Change how envirnment variables are set in Github workflows
-
 ## 0.4.0 2020-10-29
 
 - Upgrade SDK v4
