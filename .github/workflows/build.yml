@@ -29,12 +29,23 @@ jobs:
       - name: Run build
         run: yarn build
 
+      - name: Fetch tags
+        run: echo "publish::true" >> $GITHUB_ENV
+
+      - name: Publish
+        if: env.publish == 'true'
+        run: echo "GITHUB_ENV worked!"
+
+      
+
+        
+
   # Publishing is done in a separate job to allow
   # for all matrix builds to complete.
   release:
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    # if: github.ref == 'refs/heads/master'
     strategy:
       fail-fast: false
       matrix:
@@ -59,7 +70,7 @@ jobs:
           if git describe --exact-match --match "v*.*.*" HEAD^2
           then
             echo "Found version commit tag. Publishing."
-            echo "::set-output name=publish::true"
+            echo "publish::true" >> $GITHUB_ENV
           else
             echo "Version commit tag not found. Not publishing."
           fi
