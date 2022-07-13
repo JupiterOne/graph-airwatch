@@ -1,5 +1,4 @@
-# Integration with JupiterOne
-
+# AirWatch
 ## VMWare AirWatch + JupiterOne Integration Benefits
 
 - Visualize VMWare AirWatch admins, users, groups, and devices in the 
