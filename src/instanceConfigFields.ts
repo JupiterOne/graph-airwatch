@@ -2,18 +2,18 @@ import { IntegrationInstanceConfigFieldMap } from '@jupiterone/integration-sdk-c
 
 const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
   airwatchApiKey: {
-    type: "string",
+    type: 'string',
     mask: true,
   },
   airwatchUsername: {
-    type: "string",
+    type: 'string',
   },
   airwatchPassword: {
-    type: "string",
+    type: 'string',
     mask: true,
   },
   airwatchHost: {
-    type: "string",
+    type: 'string',
   },
 };
 

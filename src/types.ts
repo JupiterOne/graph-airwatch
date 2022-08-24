@@ -5,8 +5,8 @@ import { IntegrationInstanceConfig } from '@jupiterone/integration-sdk-core';
  * same properties defined by `instanceConfigFields`.
  */
 export interface IntegrationConfig extends IntegrationInstanceConfig {
-  airwatchApiKey: string,
-  airwatchUsername: string,
-  airwatchPassword: string,
-  airwatchHost: string,
+  airwatchApiKey: string;
+  airwatchUsername: string;
+  airwatchPassword: string;
+  airwatchHost: string;
 }

@@ -5,7 +5,11 @@ import {
 } from '@jupiterone/integration-sdk-core';
 
 import { IntegrationConfig } from '../types';
-import { ACCOUNT_ENTITY_CLASS, ACCOUNT_ENTITY_TYPE, STEP_FETCH_ACCOUNT } from './constants';
+import {
+  ACCOUNT_ENTITY_CLASS,
+  ACCOUNT_ENTITY_TYPE,
+  STEP_FETCH_ACCOUNT,
+} from './constants';
 
 export const ACCOUNT_ENTITY_KEY = 'entity:account';
 
