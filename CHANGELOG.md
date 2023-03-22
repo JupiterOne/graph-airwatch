@@ -8,6 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.5.0 - 2023-03-22
+
+- New properties added to entities:
+
+  | Entity          | Properties |
+  | --------------- | ---------- |
+  | `user_endpoint` | `email`    |
+
 ## 0.4.0 2020-10-29
 
 - Upgrade SDK v4

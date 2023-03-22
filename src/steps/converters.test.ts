@@ -61,7 +61,8 @@ const device: AirWatchDevice = {
   OperatingSystem: 'device.OperatingSystem',
   WifiSsid: 'device.WifiSsid',
   IsSupervised: false,
-  Username: 'device.Username',
+  UserEmailAddress: 'john@testemail.com',
+  UserName: 'device.Username',
   HostName: 'device.HostName',
   ComplianceStatus: 'Compliant',
 };

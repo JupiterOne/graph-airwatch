@@ -46,7 +46,8 @@ export interface AirWatchDevice {
   OperatingSystem: string;
   WifiSsid: string;
   IsSupervised: boolean;
-  Username: string;
+  UserName: string;
+  UserEmailAddress: string;
   UserId?: {
     Uuid: string;
     Name: string;
