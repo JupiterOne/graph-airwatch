@@ -54,6 +54,8 @@ export function createDeviceEntity(host: string, data: AirWatchDevice): Entity {
         _type: DEVICE_ENTITY_TYPE,
         _key: data.Uuid,
         ...convertProperties(data),
+        username: data.UserName,
+        email: data.UserEmailAddress?.toLowerCase(),
         webLink: `https://${host}/AirWatch/#/AirWatch/Device/Details/Summary/${data.Id.Value}`,
         name: data.DeviceFriendlyName,
         hostname: data.HostName,
