@@ -4,6 +4,7 @@ import {
   convertProperties,
   createIntegrationEntity,
   Entity,
+  parseTimePropertyValue,
 } from '@jupiterone/integration-sdk-core';
 
 import {
@@ -46,6 +47,10 @@ export function createAdminEntity(host: string, data: AirWatchAdmin): Entity {
 }
 
 export function createDeviceEntity(host: string, data: AirWatchDevice): Entity {
+  const formatMacAddress = (macAddress: string | undefined) =>
+    macAddress && macAddress.length == 12
+      ? macAddress.replace(/(.{2})(?=.)/g, '$1:')
+      : undefined;
   return createIntegrationEntity({
     entityData: {
       source: data,
@@ -53,7 +58,7 @@ export function createDeviceEntity(host: string, data: AirWatchDevice): Entity {
         _class: DEVICE_ENTITY_CLASS,
         _type: DEVICE_ENTITY_TYPE,
         _key: data.Uuid,
-        ...convertProperties(data),
+        ...convertProperties(data), // TODO: Explicitly pull out properties instead of using convertProperties.
         username: data.UserName,
         email: data.UserEmailAddress?.toLowerCase(),
         webLink: `https://${host}/AirWatch/#/AirWatch/Device/Details/Summary/${data.Id.Value}`,
@@ -62,8 +67,13 @@ export function createDeviceEntity(host: string, data: AirWatchDevice): Entity {
         complianceStatus: data.ComplianceStatus === 'Compliant' ? 1 : undefined,
         platform: String(data.Platform).toLowerCase(),
         make: data.Model,
+        model: data.Model,
         serial: data.SerialNumber,
+        serialNumber: data.SerialNumber,
+        deviceId: data.Id.Value,
+        macAddress: formatMacAddress(data.MacAddress),
         category: 'endpoint',
+        lastSeenOn: parseTimePropertyValue(data.LastSeen),
       },
     },
   });
