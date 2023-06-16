@@ -72,7 +72,9 @@ export function createDeviceEntity(host: string, data: AirWatchDevice): Entity {
         deviceId: data.Id.Value,
         macAddress: formatMacAddress(data.MacAddress),
         category: 'endpoint',
-        lastSeenOn: parseTimePropertyValue(data.LastSeen),
+        lastSeenOn: parseTimePropertyValue(
+          new Date(data.LastSeen).toISOString(),
+        ), // LastSeen is not formatted as an ISO string properly.
       },
     },
   });
