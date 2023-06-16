@@ -47,7 +47,8 @@ const device: AirWatchDevice = {
   },
   Uuid: 'device.Uuid',
   SerialNumber: 'device.SerialNumber',
-  MacAddress: 'dvice.MacAddress',
+  MacAddress: 'A6BBF6BEFBAB',
+  LastSeen: '2020-03-20T19:25:19.843',
   Imei: 'device.Imei',
   DeviceFriendlyName: 'device.DeviceFriendlyName',
   OwnerId: 'device.UserId.Uuid',
@@ -138,8 +139,7 @@ test('createDeviceEntity', () => {
     ],
     uuid: 'device.Uuid',
     serial: 'device.SerialNumber',
-    serialNumber: 'device.SerialNumber',
-    macAddress: 'dvice.MacAddress',
+    macAddress: 'a6:bb:f6:be:fb:ab',
     imei: 'device.Imei',
     ownerId: 'device.UserId.Uuid',
     name: 'device.DeviceFriendlyName',
@@ -155,6 +155,7 @@ test('createDeviceEntity', () => {
     hostname: 'device.HostName',
     complianceStatus: 1,
     category: 'endpoint',
+    lastSeenOn: 1584732319843,
   });
 });
 

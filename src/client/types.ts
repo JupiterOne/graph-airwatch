@@ -53,6 +53,7 @@ export interface AirWatchDevice {
     Name: string;
   };
   ComplianceStatus?: string;
+  LastSeen: string;
 }
 
 export interface AirWatchOrganizationGroup {
