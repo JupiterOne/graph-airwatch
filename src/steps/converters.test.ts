@@ -20,6 +20,7 @@ import {
   createOrganizationGroupEntity,
   createUserEntity,
 } from './converters';
+import { parseTimePropertyValue } from '@jupiterone/integration-sdk-core';
 
 const admin: AirWatchAdmin = {
   uuid: 'admin.uuid',
@@ -155,6 +156,7 @@ test('createDeviceEntity', () => {
     hostname: 'device.HostName',
     complianceStatus: 1,
     category: 'endpoint',
+    lastSeenOn: parseTimePropertyValue(device.LastSeen),
   });
 });
 
