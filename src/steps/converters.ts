@@ -69,7 +69,6 @@ export function createDeviceEntity(host: string, data: AirWatchDevice): Entity {
         make: data.Model,
         model: data.Model,
         serial: data.SerialNumber,
-        serialNumber: data.SerialNumber,
         deviceId: data.Id.Value,
         macAddress: formatMacAddress(data.MacAddress),
         category: 'endpoint',
