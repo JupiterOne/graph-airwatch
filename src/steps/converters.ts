@@ -49,7 +49,7 @@ export function createAdminEntity(host: string, data: AirWatchAdmin): Entity {
 export function createDeviceEntity(host: string, data: AirWatchDevice): Entity {
   const formatMacAddress = (macAddress: string | undefined) =>
     macAddress && macAddress.length == 12
-      ? macAddress.replace(/(.{2})(?=.)/g, '$1:')
+      ? macAddress.replace(/(.{2})(?=.)/g, '$1:').toLowerCase()
       : undefined;
   return createIntegrationEntity({
     entityData: {

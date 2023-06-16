@@ -140,7 +140,7 @@ test('createDeviceEntity', () => {
     ],
     uuid: 'device.Uuid',
     serial: 'device.SerialNumber',
-    macAddress: 'A6:BB:F6:BE:FB:AB',
+    macAddress: 'a6:bb:f6:be:fb:ab',
     imei: 'device.Imei',
     ownerId: 'device.UserId.Uuid',
     name: 'device.DeviceFriendlyName',
