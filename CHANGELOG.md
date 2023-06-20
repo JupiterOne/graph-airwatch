@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.5.2 - 2023-06-20
+
+### Added
+
+- `lastSeenOn`, `model`, `deviceId`, and `macAddress` to Device entities.
+
 ## 0.5.0 - 2023-03-22
 
 - New properties added to entities:
