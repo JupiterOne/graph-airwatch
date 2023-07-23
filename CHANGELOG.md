@@ -12,7 +12,8 @@ and this project adheres to
 
 ### Changed
 
-- `name` on to Device entities to default to the `uuid`.
+- `name` on to Device entities to default to the `username` plus the `model` if
+  DeviceFriendlyName is not provided.
 
 ## 0.5.2 - 2023-06-20
 
