@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.5.3 - 2023-07-23
+
+### Changed
+
+- `name` on to Device entities to default to the `uuid`.
+
 ## 0.5.2 - 2023-06-20
 
 ### Added
