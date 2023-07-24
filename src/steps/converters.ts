@@ -62,7 +62,9 @@ export function createDeviceEntity(host: string, data: AirWatchDevice): Entity {
         username: data.UserName,
         email: data.UserEmailAddress?.toLowerCase(),
         webLink: `https://${host}/AirWatch/#/AirWatch/Device/Details/Summary/${data.Id.Value}`,
-        name: data.DeviceFriendlyName,
+        name:
+          data.DeviceFriendlyName ||
+          `${data.UserName || 'Unknown User'}'s ${data.Model || 'Device'}`,
         hostname: data.HostName,
         complianceStatus: data.ComplianceStatus === 'Compliant' ? 1 : undefined,
         platform: String(data.Platform).toLowerCase(),
