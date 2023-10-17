@@ -1,0 +1,12 @@
+openapi: 3.0.1
+info:
+  title: '@jupiterone/graph-airwatch'
+  description: A graph conversion tool for https://www.air-watch.com/.
+  x-cortex-git:
+    github:
+      repository: JupiterOne/graph-airwatch
+  x-cortex-owners:
+    - type: group
+      name: JupiterOne/integrations
+  x-cortex-service-groups: tier-4
+  x-cortex-tag: '@jupiterone/graph-airwatch'

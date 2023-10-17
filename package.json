@@ -2,9 +2,12 @@
   "name": "@jupiterone/graph-airwatch",
   "version": "0.5.3",
   "description": "A graph conversion tool for https://www.air-watch.com/.",
-  "main": "dist/index.js",
-  "repository": "https://github.com/JupiterOne/graph-airwatch",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JupiterOne/graph-airwatch"
+  },
   "license": "SEE LICENSE IN LICENSE",
+  "main": "dist/index.js",
   "files": [
     "LICENSE",
     "dist"
