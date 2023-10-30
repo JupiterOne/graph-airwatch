@@ -79,10 +79,10 @@ export default class AirWatchClient {
     } while (response.Devices.length < response.Total);
   }
 
-  public async getDeviceSecurityDetails(deviceUuid: string) {
+  public async getDeviceSecurityDetails(serialNumber: string) {
     return await this.makeRequest(
-      `/mdm/devices/security?searchby=Udid&id=${encodeURIComponent(
-        deviceUuid,
+      `/mdm/devices/security?searchby=Serialnumber&id=${encodeURIComponent(
+        serialNumber,
       )}`,
     );
   }
