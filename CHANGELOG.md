@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.5.73 - 2023-10-30
+
+### Changed
+
+- Added deviceSecurity information to device
+
 ## 0.5.3 - 2023-07-23
 
 ### Changed
