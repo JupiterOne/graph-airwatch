@@ -1,6 +1,6 @@
 {
   "name": "@jupiterone/graph-airwatch",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "A graph conversion tool for https://www.air-watch.com/.",
   "repository": {
     "type": "git",
