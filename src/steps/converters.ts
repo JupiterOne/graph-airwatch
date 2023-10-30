@@ -46,7 +46,11 @@ export function createAdminEntity(host: string, data: AirWatchAdmin): Entity {
   });
 }
 
-export function createDeviceEntity(host: string, data: AirWatchDevice): Entity {
+export function createDeviceEntity(
+  host: string,
+  data: AirWatchDevice,
+  securityDetails?,
+): Entity {
   const formatMacAddress = (macAddress: string | undefined) =>
     macAddress && macAddress.length == 12
       ? macAddress.replace(/(.{2})(?=.)/g, '$1:').toLowerCase()
@@ -59,6 +63,7 @@ export function createDeviceEntity(host: string, data: AirWatchDevice): Entity {
         _type: DEVICE_ENTITY_TYPE,
         _key: data.Uuid,
         ...convertProperties(data), // TODO: Explicitly pull out properties instead of using convertProperties.
+        ...convertProperties(securityDetails ? securityDetails : {}),
         username: data.UserName,
         email: data.UserEmailAddress?.toLowerCase(),
         webLink: `https://${host}/AirWatch/#/AirWatch/Device/Details/Summary/${data.Id.Value}`,
