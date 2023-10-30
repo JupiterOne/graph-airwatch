@@ -80,7 +80,11 @@ export default class AirWatchClient {
   }
 
   public async getDeviceSecurityDetails(deviceUuid: string) {
-    return await this.makeRequest(`/mdm/devices/udid/${deviceUuid}/security`);
+    return await this.makeRequest(
+      `/mdm/devices/security?searchby=Udid&id=${encodeURIComponent(
+        deviceUuid,
+      )}`,
+    );
   }
 
   public async iterateAdmins(
