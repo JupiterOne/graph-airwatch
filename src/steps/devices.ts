@@ -44,7 +44,10 @@ export async function fetchDevices({
     } else {
       let securityDetails;
       try {
-        securityDetails = await apiClient.getDeviceSecurityDetails(device.Uuid);
+        securityDetails = await apiClient.getDeviceSecurityDetails(
+          device.SerialNumber,
+        );
+        logger.info({}, 'Retrieved securityDetails');
       } catch (error) {
         logger.info(error, 'Error while retrieving securityDetails');
       }
