@@ -11,8 +11,8 @@ import { fetchAccountDetails } from './account';
 import { fetchDevices } from './devices';
 
 const integrationConfig: IntegrationConfig = {
-  airwatchHost: process.env.AIRWATCH_HOST || 'as1380.awmdm.com',
-  airwatchUsername: process.env.AIRWATCH_USERNAME || 'jupiterone-dev',
+  airwatchHost: process.env.AIRWATCH_HOST || 'as1985.awmdm.com',
+  airwatchUsername: process.env.AIRWATCH_USERNAME || 'Jupiterone',
   airwatchPassword: process.env.AIRWATCH_PASSWORD || 'top-secret',
   airwatchApiKey: process.env.AIRWATCH_API_KEY || 'abc123',
 };

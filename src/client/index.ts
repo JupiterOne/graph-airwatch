@@ -70,11 +70,17 @@ export default class AirWatchClient {
       response = await this.makeRequest<AirWatchDevicesResponse>(
         `/mdm/devices/search?page=${page++}`,
       );
-
+      if (!response.Devices) {
+        return;
+      }
       for (const device of response.Devices) {
         await iteratee(device);
       }
     } while (response.Devices.length < response.Total);
+  }
+
+  public async getDeviceSecurityDetails(deviceUuid: string) {
+    return await this.makeRequest(`/mdm/devices/udid/${deviceUuid}/security`);
   }
 
   public async iterateAdmins(

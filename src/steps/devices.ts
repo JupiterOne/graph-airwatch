@@ -42,10 +42,17 @@ export async function fetchDevices({
         'Device.Uuid seen before, iterateDevices may be seeing duplicates',
       );
     } else {
+      let securityDetails;
+      try {
+        securityDetails = await apiClient.getDeviceSecurityDetails(device.Uuid);
+      } catch (error) {
+        logger.info(error, 'Error while retrieving securityDetails');
+      }
+
       seenUuids.add(device.Uuid);
 
       const deviceEntity = await jobState.addEntity(
-        createDeviceEntity(apiClient.host, device),
+        createDeviceEntity(apiClient.host, device, securityDetails),
       );
       await jobState.addRelationship(
         createDirectRelationship({
