@@ -79,7 +79,7 @@ export function createDeviceEntity(
         make: data.Model,
         model: data.Model,
         serial: data.SerialNumber,
-        deviceId: data.Id.Value,
+        deviceId: data.Id.Value.toString(),
         macAddress: formatMacAddress(data.MacAddress),
         category: 'endpoint',
         lastSeenOn: parseTimePropertyValue(
