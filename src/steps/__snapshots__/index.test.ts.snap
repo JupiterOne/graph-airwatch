@@ -1,17 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should collect data 1`] = `
-Object {
-  "collectedEntities": Array [
-    Object {
-      "_class": Array [
+{
+  "collectedEntities": [
+    {
+      "_class": [
         "Account",
       ],
       "_key": "airwatch-local-integration-instance",
-      "_rawData": Array [
-        Object {
+      "_rawData": [
+        {
           "name": "default",
-          "rawData": Object {
+          "rawData": {
             "host": "as1985.awmdm.com",
             "username": "Jupiterone",
           },
@@ -23,18 +23,18 @@ Object {
       "name": "as1985.awmdm.com",
       "webLink": "https://as1985.awmdm.com",
     },
-    Object {
-      "_class": Array [
+    {
+      "_class": [
         "Group",
         "UserGroup",
       ],
       "_key": "71b1202a-fc21-4239-bacb-5e74e35a820e",
-      "_rawData": Array [
-        Object {
+      "_rawData": [
+        {
           "name": "default",
-          "rawData": Object {
+          "rawData": {
             "Admins": "4",
-            "Children": Array [],
+            "Children": [],
             "Country": "Argentina",
             "CreatedOn": "10/27/2023 3:05:53 PM",
             "Devices": "0",
@@ -65,15 +65,15 @@ Object {
       "uuid": "71b1202a-fc21-4239-bacb-5e74e35a820e",
       "webLink": "https://as1985.awmdm.com/AirWatch/#/AirWatch/OrganizationGroup/Details/Index/1112",
     },
-    Object {
-      "_class": Array [
+    {
+      "_class": [
         "User",
       ],
       "_key": "c0f5e60a-c1e1-480f-902c-3d864294153e",
-      "_rawData": Array [
-        Object {
+      "_rawData": [
+        {
           "name": "default",
-          "rawData": Object {
+          "rawData": {
             "LastLoginTimeStamp": "2023-10-27T19:33:33.163",
             "LocationGroup": "M104252336",
             "LocationGroupId": "1112",
@@ -85,8 +85,8 @@ Object {
             "messageTemplateId": 0,
             "messageTemplateUuid": "00000000-0000-0000-0000-000000000000",
             "organizationGroupUuid": "71b1202a-fc21-4239-bacb-5e74e35a820e",
-            "roles": Array [
-              Object {
+            "roles": [
+              {
                 "IsActive": true,
                 "LocationGroup": "M104252336",
                 "LocationGroupId": "1112",
@@ -123,15 +123,15 @@ Object {
       "uuid": "c0f5e60a-c1e1-480f-902c-3d864294153e",
       "webLink": "https://as1985.awmdm.com/AirWatch/#/Admin/List",
     },
-    Object {
-      "_class": Array [
+    {
+      "_class": [
         "User",
       ],
       "_key": "e291bbe4-dc42-4205-834e-a3cb254c134d",
-      "_rawData": Array [
-        Object {
+      "_rawData": [
+        {
           "name": "default",
-          "rawData": Object {
+          "rawData": {
             "LastLoginTimeStamp": "2023-10-27T18:06:03.293",
             "LocationGroup": "M104252336",
             "LocationGroupId": "1112",
@@ -143,8 +143,8 @@ Object {
             "messageTemplateId": 0,
             "messageTemplateUuid": "00000000-0000-0000-0000-000000000000",
             "organizationGroupUuid": "71b1202a-fc21-4239-bacb-5e74e35a820e",
-            "roles": Array [
-              Object {
+            "roles": [
+              {
                 "IsActive": true,
                 "LocationGroup": "M104252336",
                 "LocationGroupId": "1112",
@@ -182,8 +182,8 @@ Object {
       "webLink": "https://as1985.awmdm.com/AirWatch/#/Admin/List",
     },
   ],
-  "collectedRelationships": Array [
-    Object {
+  "collectedRelationships": [
+    {
       "_class": "HAS",
       "_fromEntityKey": "airwatch-local-integration-instance",
       "_key": "airwatch-local-integration-instance|has|71b1202a-fc21-4239-bacb-5e74e35a820e",
@@ -191,7 +191,7 @@ Object {
       "_type": "airwatch_account_has_group",
       "displayName": "HAS",
     },
-    Object {
+    {
       "_class": "HAS",
       "_fromEntityKey": "71b1202a-fc21-4239-bacb-5e74e35a820e",
       "_key": "71b1202a-fc21-4239-bacb-5e74e35a820e|has|c0f5e60a-c1e1-480f-902c-3d864294153e",
@@ -199,7 +199,7 @@ Object {
       "_type": "airwatch_group_has_user",
       "displayName": "HAS",
     },
-    Object {
+    {
       "_class": "HAS",
       "_fromEntityKey": "71b1202a-fc21-4239-bacb-5e74e35a820e",
       "_key": "71b1202a-fc21-4239-bacb-5e74e35a820e|has|e291bbe4-dc42-4205-834e-a3cb254c134d",
@@ -208,7 +208,7 @@ Object {
       "displayName": "HAS",
     },
   ],
-  "encounteredTypes": Array [
+  "encounteredTypes": [
     "airwatch_account",
     "airwatch_group",
     "airwatch_account_has_group",

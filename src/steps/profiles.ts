@@ -23,13 +23,21 @@ import { createProfileEntity } from './converters';
 export async function fetchProfiles({
   instance,
   jobState,
+  logger,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
   await jobState.iterateEntities(
     { _type: ORGANIZATION_GROUP_ENTITY_TYPE },
     async (groupEntity) => {
       await apiClient.iterateOrganizationGroupProfiles(async (profile) => {
-        await jobState.addEntity(createProfileEntity(apiClient.host, profile));
+        const profileEntity = createProfileEntity(apiClient.host, profile);
+        if (jobState.hasKey(profileEntity._key)) {
+          logger.info(
+            { profileKey: profileEntity._key },
+            'Duplicated key found',
+          );
+        }
+        await jobState.addEntity(profileEntity);
       }, groupEntity._key);
     },
   );
@@ -49,15 +57,27 @@ export async function buildDeviceProfileRelationships({
           deviceEntity.deviceId! as string,
         );
         for (const profile of response.DeviceProfiles) {
-          await jobState.addRelationship(
-            createDirectRelationship({
-              _class: DEVICE_PROFILE_REATIONSHIP_CLASS,
-              fromKey: response.DeviceId.Uuid,
-              fromType: DEVICE_ENTITY_TYPE,
-              toKey: profile.Uuid,
-              toType: PROFILE_ENTITY_TYPE,
-            }),
-          );
+          if (
+            response.DeviceId.Uuid &&
+            profile.Uuid &&
+            jobState.hasKey(response.DeviceId.Uuid) &&
+            jobState.hasKey(profile.Uuid)
+          ) {
+            await jobState.addRelationship(
+              createDirectRelationship({
+                _class: DEVICE_PROFILE_REATIONSHIP_CLASS,
+                fromKey: response.DeviceId.Uuid,
+                fromType: DEVICE_ENTITY_TYPE,
+                toKey: profile.Uuid,
+                toType: PROFILE_ENTITY_TYPE,
+              }),
+            );
+          } else {
+            logger.info(
+              { fromKey: response.DeviceId.Uuid, toKey: profile.Uuid },
+              'Could not create a relationship',
+            );
+          }
         }
       } catch (error) {
         logger.info(
