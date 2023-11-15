@@ -118,3 +118,56 @@ export interface AirWatchOrganizationGroupsResponse {
   OrganizationGroups: AirWatchOrganizationGroup[];
   TotalResults: number;
 }
+
+export interface AirwatchProfileResponse {
+  profiles: AirwatchProfile[];
+  total_count: number;
+}
+export interface AirwatchProfile {
+  uuid: string;
+  name: string;
+  status: string;
+  assignment_type: string;
+  managed_by: string;
+  organization_group_uuid: string;
+  platform: string;
+  configuration_type: string;
+  context: string;
+  assigned_smart_groups: any[];
+  excluded_smart_groups: any[];
+  configured_payload: ConfiguredPayload[];
+  created_by_resource_profile: boolean;
+}
+
+export interface ConfiguredPayload {
+  name: string;
+  display_key: string;
+}
+export interface AirwatchDeviceProfileResponse {
+  DeviceId: DeviceID;
+  DeviceProfiles: DeviceProfile[];
+  Page: number;
+  PageSize: number;
+  Total: number;
+}
+
+export interface DeviceID {
+  Name: string;
+  Uuid: string;
+}
+
+export interface DeviceProfile {
+  Status: number;
+  Name: string;
+  Description: string;
+  LocationGroupId: object;
+  CurrentVersion: number;
+  AssignmentType: number;
+  InstalledProfileVersion: number;
+  Id: ID;
+  Uuid: string;
+}
+
+export interface ID {
+  Value: number;
+}

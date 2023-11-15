@@ -12,6 +12,7 @@ import {
   AirWatchDevice,
   AirWatchDeviceUser,
   AirWatchOrganizationGroup,
+  AirwatchProfile,
 } from '../client/types';
 import {
   ADMIN_ENTITY_CLASS,
@@ -22,6 +23,8 @@ import {
   DEVICE_USER_ENTITY_TYPE,
   ORGANIZATION_GROUP_ENTITY_CLASS,
   ORGANIZATION_GROUP_ENTITY_TYPE,
+  PROFILE_ENTITY_CLASS,
+  PROFILE_ENTITY_TYPE,
 } from './constants';
 
 export function createAdminEntity(host: string, data: AirWatchAdmin): Entity {
@@ -123,6 +126,25 @@ export function createUserEntity(
         ...convertProperties(data),
         username: data.Name,
         webLink: `https://${host}/AirWatch/#/AirWatch/User/Details/Summary/${data.Id.Value}`,
+      },
+    },
+  });
+}
+
+export function createProfileEntity(
+  host: string,
+  data: AirwatchProfile,
+): Entity {
+  return createIntegrationEntity({
+    entityData: {
+      source: data,
+      assign: {
+        _class: PROFILE_ENTITY_CLASS,
+        _type: PROFILE_ENTITY_TYPE,
+        _key: data.uuid,
+        ...convertProperties(data),
+        payloads: data.configured_payload.map((entry) => entry.name),
+        webLink: `https://${host}/AirWatch/#/Profile/List/`,
       },
     },
   });
