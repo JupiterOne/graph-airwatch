@@ -14,6 +14,9 @@ import {
   AirWatchOrganizationGroup,
   AirWatchOrganizationGroupChild,
   AirWatchOrganizationGroupsResponse,
+  AirwatchDeviceProfileResponse,
+  AirwatchProfile,
+  AirwatchProfileResponse,
   ResourceIteratee,
 } from './types';
 
@@ -144,19 +147,65 @@ export default class AirWatchClient {
     return response.filter((g) => g.ParentLocationGroup.Id.Value === groupId);
   }
 
-  private async makeRequest<T>(path: string): Promise<T> {
+  public async iterateOrganizationGroupProfiles(
+    iteratee: ResourceIteratee<AirwatchProfile>,
+    groupUuid: string,
+  ): Promise<void> {
+    const response = await this.makeRequest<AirwatchProfileResponse>(
+      `/mdm/profiles/search`,
+      'POST',
+      JSON.stringify({
+        profileSearchRequestV3Model: {
+          organization_group_uuid: groupUuid,
+        },
+      }),
+      'version=3',
+    );
+
+    for (const profile of response.profiles) {
+      //If we need to add details, for now its not needed.
+      // const details = await this.makeRequest<AirwatchProfileResponse>(
+      //   `/mdm/profiles/${profile.uuid}`,
+      //   'GET',
+      //   undefined,
+      //   '3',
+      // );
+      await iteratee(profile);
+    }
+  }
+  public async fetchProfilesOfDevice(
+    deviceId: string,
+  ): Promise<AirwatchDeviceProfileResponse> {
+    const response: AirwatchDeviceProfileResponse = await this.makeRequest(
+      `/mdm/devices/${deviceId}/profiles`,
+      'GET',
+      undefined,
+      '1',
+    );
+    return response;
+  }
+  private async makeRequest<T>(
+    path: string,
+    method: string = 'GET',
+    postBody?: any,
+    apiVersion: string = '2',
+  ): Promise<T> {
     const url = `https://${this._host}/API${path}`;
     const response = await fetch(url, {
-      method: 'GET',
+      method: method,
+      body: postBody,
       headers: {
         Authorization: this.authorization,
         'aw-tenant-code': this.apiKey,
-        Accept: 'application/json;version=2',
+        Accept: `application/json;version=${apiVersion}`,
+        'content-type': 'application/json',
       },
     });
-
     const body = await response.text();
-    const bodyJson = body.length > 0 && JSON.parse(body);
+    const bodyJson =
+      body.length > 0 &&
+      !body.startsWith('<!DOCTYPE html>') &&
+      JSON.parse(body);
 
     if (response.status >= 200 && response.status < 300) {
       return bodyJson || {};

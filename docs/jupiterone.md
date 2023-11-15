@@ -101,6 +101,7 @@ The following entities are created:
 | Device             | `user_endpoint`    | `Host`, `Device`     |
 | Device User        | `device_user`      | `User`               |
 | Organization Group | `airwatch_group`   | `Group`, `UserGroup` |
+| Profile            | `airwatch_profile` | `Configuration`      |
 
 ### Relationships
 
@@ -113,6 +114,7 @@ The following relationships are created/mapped:
 | `airwatch_group`      | **HAS**               | `airwatch_group`      |
 | `airwatch_group`      | **HAS**               | `airwatch_user`       |
 | `user_endpoint`       | **HAS**               | `device_user`         |
+| `user_endpoint`       | **IMPLEMENTS**        | `airwatch_profile`    |
 
 <!--
 ********************************************************************************
