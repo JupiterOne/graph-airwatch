@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.6 - 2023-11-15
+
+### Changed
+
+- Added profile information
+
 ## 0.5.8 - 2023-10-30
 
 ### Changed
