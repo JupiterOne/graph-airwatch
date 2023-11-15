@@ -159,7 +159,7 @@ export default class AirWatchClient {
           organization_group_uuid: groupUuid,
         },
       }),
-      'version=3',
+      '3',
     );
 
     for (const profile of response.profiles) {
