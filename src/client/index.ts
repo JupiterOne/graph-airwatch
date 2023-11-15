@@ -168,7 +168,7 @@ export default class AirWatchClient {
       //   `/mdm/profiles/${profile.uuid}`,
       //   'GET',
       //   undefined,
-      //   'version=3',
+      //   '3',
       // );
       await iteratee(profile);
     }
@@ -180,7 +180,7 @@ export default class AirWatchClient {
       `/mdm/devices/${deviceId}/profiles`,
       'GET',
       undefined,
-      'version=1',
+      '1',
     );
     return response;
   }
@@ -188,7 +188,7 @@ export default class AirWatchClient {
     path: string,
     method: string = 'GET',
     postBody?: any,
-    apiVersion: string = 'version=2',
+    apiVersion: string = '2',
   ): Promise<T> {
     const url = `https://${this._host}/API${path}`;
     const response = await fetch(url, {
@@ -197,7 +197,7 @@ export default class AirWatchClient {
       headers: {
         Authorization: this.authorization,
         'aw-tenant-code': this.apiKey,
-        Accept: 'application/json;' + apiVersion,
+        Accept: `application/json;version=${apiVersion}`,
         'content-type': 'application/json',
       },
     });
