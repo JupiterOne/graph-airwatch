@@ -145,7 +145,7 @@ export function createProfileEntity(
         name: data.name,
         platform: data.platform,
         status: data.status,
-        managed_by: data.managed_by,
+        managedBy: data.managed_by,
         payloads: data.configured_payload.map((entry) => entry.name),
         webLink: `https://${host}/AirWatch/#/Profile/List/`,
       },
