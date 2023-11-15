@@ -36,6 +36,7 @@ export async function fetchProfiles({
             { profileKey: profileEntity._key },
             'Duplicated key found',
           );
+          return;
         }
         await jobState.addEntity(profileEntity);
       }, groupEntity._key);
@@ -55,6 +56,12 @@ export async function buildDeviceProfileRelationships({
       try {
         const response = await apiClient.fetchProfilesOfDevice(
           deviceEntity.deviceId! as string,
+        );
+        // we don't have a way to test this - I'm using the model provided by the provider
+        // but its not working. Let's try loggin the involved keys.
+        logger.info(
+          { objectKeys: Object.keys(response) },
+          'TEMP - log response keys',
         );
         for (const profile of response.DeviceProfiles) {
           if (
