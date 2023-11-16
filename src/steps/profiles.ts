@@ -58,12 +58,16 @@ export async function buildDeviceProfileRelationships({
           deviceEntity.deviceId! as string,
         );
         // we don't have a way to test this - I'm using the model provided by the provider
-        // but its not working. Let's try loggin the involved keys.
+        // but its not working. Let's try logging.
         logger.info(
-          { objectKeys: Object.keys(response) },
-          'TEMP - log response keys',
+          { objectKeys: response.DeviceProfiles?.length },
+          'TEMP - DeviceProfiles length',
         );
         for (const profile of response.DeviceProfiles) {
+          logger.info(
+            { objectKeys: Object.keys(profile) },
+            'TEMP - profileKeys',
+          );
           if (
             response.DeviceId.Uuid &&
             profile.Uuid &&
