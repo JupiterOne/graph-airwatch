@@ -51,46 +51,37 @@ export async function buildDeviceProfileRelationships({
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
   await jobState.iterateEntities(
-    { _type: DEVICE_ENTITY_TYPE },
-    async (deviceEntity) => {
+    { _type: PROFILE_ENTITY_TYPE },
+    async (profileEntity) => {
       try {
-        const response = await apiClient.fetchProfilesOfDevice(
-          deviceEntity.deviceId! as string,
+        const response = await apiClient.fetchDevicesForProfile(
+          profileEntity._key,
         );
         // we don't have a way to test this - I'm using the model provided by the provider
-        // but its not working. Let's try logging.
-        for (const profile of response.DeviceProfiles) {
-          let profileUUid: string | undefined;
-          if (profile.Uuid) {
-            profileUUid = profile.Uuid;
-          } else if (profile.Id.Value) {
-            const details = await apiClient.fetchProfilesDetails(
-              profile.Id.Value?.toString(),
-            );
-            logger.info(
-              { detailKeys: Object.keys(details.general) },
-              'TEMP - detail keys.',
-            );
-            profileUUid = details.general.uuid;
-          }
+        // Let's try logging.
+        for (const device of response.profileAssignedDevices) {
+          logger.info(
+            { deviceKeys: Object.keys(device) },
+            'TEMP - Keys of device',
+          );
           if (
-            response.DeviceId.Uuid &&
-            profileUUid &&
-            jobState.hasKey(response.DeviceId.Uuid) &&
-            jobState.hasKey(profileUUid)
+            device.uuid &&
+            profileEntity._key &&
+            jobState.hasKey(device.uuid) &&
+            jobState.hasKey(profileEntity._key)
           ) {
             await jobState.addRelationship(
               createDirectRelationship({
                 _class: DEVICE_PROFILE_REATIONSHIP_CLASS,
-                fromKey: response.DeviceId.Uuid,
+                fromKey: device.uuid,
                 fromType: DEVICE_ENTITY_TYPE,
-                toKey: profileUUid,
+                toKey: profileEntity._key,
                 toType: PROFILE_ENTITY_TYPE,
               }),
             );
           } else {
             logger.info(
-              { fromKey: response.DeviceId.Uuid, toKey: profileUUid },
+              { fromKey: device.uuid, toKey: profileEntity._key },
               'Could not create a relationship',
             );
           }

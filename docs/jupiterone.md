@@ -113,7 +113,7 @@ The following relationships are created:
 | `airwatch_account`    | **MANAGES**           | `user_endpoint`       |
 | `airwatch_group`      | **HAS**               | `airwatch_group`      |
 | `airwatch_group`      | **HAS**               | `airwatch_user`       |
-| `user_endpoint`       | **IMPLEMENTS**        | `airwatch_profile`    |
+| `user_endpoint`       | **INSTALLED**         | `airwatch_profile`    |
 | `user_endpoint`       | **HAS**               | `device_user`         |
 
 <!--
