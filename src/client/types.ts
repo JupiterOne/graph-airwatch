@@ -143,33 +143,20 @@ export interface ConfiguredPayload {
   name: string;
   display_key: string;
 }
-export interface AirwatchDeviceProfileResponse {
-  DeviceId: DeviceID;
-  DeviceProfiles: DeviceProfile[];
-  Page: number;
-  PageSize: number;
-  Total: number;
+
+export interface DevicesForProfile {
+  profileAssignedDevices: ProfileAssignedDevice[];
+  AdditionalInfo: AdditionalInfo;
+  TotalResults: number;
 }
 
-export interface DeviceID {
-  Name: string;
-  Uuid: string;
+export interface AdditionalInfo {
+  Links: any[];
 }
 
-export interface DeviceProfile {
-  Status: number;
-  Name: string;
-  Description: string;
-  LocationGroupId: object;
-  CurrentVersion: number;
-  AssignmentType: number;
-  InstalledProfileVersion: number;
-  Id: ID;
-  Uuid: string;
-}
-
-export interface ID {
-  Value: number;
+export interface ProfileAssignedDevice {
+  Links: any[];
+  uuid: string;
 }
 
 export interface AirwatchProfileDetails {

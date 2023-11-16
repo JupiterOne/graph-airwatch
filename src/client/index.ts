@@ -14,10 +14,10 @@ import {
   AirWatchOrganizationGroup,
   AirWatchOrganizationGroupChild,
   AirWatchOrganizationGroupsResponse,
-  AirwatchDeviceProfileResponse,
   AirwatchProfile,
   AirwatchProfileDetails,
   AirwatchProfileResponse,
+  DevicesForProfile,
   ResourceIteratee,
 } from './types';
 
@@ -174,15 +174,17 @@ export default class AirWatchClient {
       await iteratee(profile);
     }
   }
-  public async fetchProfilesOfDevice(
-    deviceId: string,
-  ): Promise<AirwatchDeviceProfileResponse> {
-    const response: AirwatchDeviceProfileResponse = await this.makeRequest(
-      `/mdm/devices/${deviceId}/profiles`,
-      'GET',
-      undefined,
-      '1',
-    );
+
+  public async fetchDevicesForProfile(
+    profileUuid: string,
+  ): Promise<DevicesForProfile> {
+    const response: DevicesForProfile =
+      await this.makeRequest<DevicesForProfile>(
+        `/mdm/profiles/${profileUuid}/devices`,
+        'GET',
+        undefined,
+        '1',
+      );
     return response;
   }
 
