@@ -67,26 +67,30 @@ export async function buildDeviceProfileRelationships({
             const details = await apiClient.fetchProfilesDetails(
               profile.Id.Value?.toString(),
             );
+            logger.info(
+              { detailKeys: Object.keys(details.general) },
+              'TEMP - detail keys.',
+            );
             profileUUid = details.general.uuid;
           }
           if (
             response.DeviceId.Uuid &&
-            profile.Uuid &&
+            profileUUid &&
             jobState.hasKey(response.DeviceId.Uuid) &&
-            jobState.hasKey(profile.Uuid)
+            jobState.hasKey(profileUUid)
           ) {
             await jobState.addRelationship(
               createDirectRelationship({
                 _class: DEVICE_PROFILE_REATIONSHIP_CLASS,
                 fromKey: response.DeviceId.Uuid,
                 fromType: DEVICE_ENTITY_TYPE,
-                toKey: profile.Uuid,
+                toKey: profileUUid,
                 toType: PROFILE_ENTITY_TYPE,
               }),
             );
           } else {
             logger.info(
-              { fromKey: response.DeviceId.Uuid, toKey: profile.Uuid },
+              { fromKey: response.DeviceId.Uuid, toKey: profileUUid },
               'Could not create a relationship',
             );
           }
