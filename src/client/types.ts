@@ -171,3 +171,40 @@ export interface DeviceProfile {
 export interface ID {
   Value: number;
 }
+
+export interface AirwatchProfileDetails {
+  general: General;
+}
+
+export interface General {
+  ProfileId: number;
+  AfwOemSettingsEnabled: boolean;
+  AfwOemType: number;
+  Name: string;
+  Description: string;
+  ProfileScope: string;
+  Version: number;
+  CreateNewVersion: boolean;
+  AssignmentType: string;
+  ProfileContext: string;
+  EnableProvisioning: boolean;
+  IsActive: boolean;
+  IsManaged: boolean;
+  Password: string;
+  AllowRemoval: string;
+  AssignedSmartGroups: EdSmartGroup[];
+  ExcludedSmartGroups: EdSmartGroup[];
+  ManagedLocationGroupID: number;
+  AssignedGeofenceArea: number[];
+  AssignedSchedule: number[];
+  ExpirationDate: string;
+  ProfileUuid: string;
+  IsProvisionedForOobe: boolean;
+  id: number;
+  uuid: string;
+}
+
+export interface EdSmartGroup {
+  SmartGroupId: number;
+  Name: string;
+}

@@ -59,15 +59,16 @@ export async function buildDeviceProfileRelationships({
         );
         // we don't have a way to test this - I'm using the model provided by the provider
         // but its not working. Let's try logging.
-        logger.info(
-          { objectKeys: response.DeviceProfiles?.length },
-          'TEMP - DeviceProfiles length',
-        );
         for (const profile of response.DeviceProfiles) {
-          logger.info(
-            { objectKeys: Object.keys(profile) },
-            'TEMP - profileKeys',
-          );
+          let profileUUid: string | undefined;
+          if (profile.Uuid) {
+            profileUUid = profile.Uuid;
+          } else if (profile.Id.Value) {
+            const details = await apiClient.fetchProfilesDetails(
+              profile.Id.Value?.toString(),
+            );
+            profileUUid = details.general.uuid;
+          }
           if (
             response.DeviceId.Uuid &&
             profile.Uuid &&

@@ -16,6 +16,7 @@ import {
   AirWatchOrganizationGroupsResponse,
   AirwatchDeviceProfileResponse,
   AirwatchProfile,
+  AirwatchProfileDetails,
   AirwatchProfileResponse,
   ResourceIteratee,
 } from './types';
@@ -182,6 +183,19 @@ export default class AirWatchClient {
       undefined,
       '1',
     );
+    return response;
+  }
+
+  public async fetchProfilesDetails(
+    profileId: string,
+  ): Promise<AirwatchProfileDetails> {
+    const response: AirwatchProfileDetails =
+      await this.makeRequest<AirwatchProfileDetails>(
+        `/mdm/profiles/${profileId}`,
+        'GET',
+        undefined,
+        '4',
+      );
     return response;
   }
   private async makeRequest<T>(
