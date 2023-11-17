@@ -60,10 +60,6 @@ export async function buildDeviceProfileRelationships({
         // we don't have a way to test this - I'm using the model provided by the provider
         // Let's try logging.
         for (const device of response.profileAssignedDevices) {
-          logger.info(
-            { deviceKeys: Object.keys(device) },
-            'TEMP - Keys of device',
-          );
           if (
             device.uuid &&
             profileEntity._key &&

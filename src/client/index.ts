@@ -152,27 +152,33 @@ export default class AirWatchClient {
     iteratee: ResourceIteratee<AirwatchProfile>,
     groupUuid: string,
   ): Promise<void> {
-    const response = await this.makeRequest<AirwatchProfileResponse>(
-      `/mdm/profiles/search`,
-      'POST',
-      JSON.stringify({
-        profileSearchRequestV3Model: {
-          organization_group_uuid: groupUuid,
-        },
-      }),
-      '3',
-    );
-
-    for (const profile of response.profiles) {
-      //If we need to add details, for now its not needed.
-      // const details = await this.makeRequest<AirwatchProfileResponse>(
-      //   `/mdm/profiles/${profile.uuid}`,
-      //   'GET',
-      //   undefined,
-      //   '3',
-      // );
-      await iteratee(profile);
-    }
+    let page = 0;
+    let response: AirwatchProfileResponse;
+    let accumulated = 0;
+    do {
+      response = await this.makeRequest<AirwatchProfileResponse>(
+        `/mdm/profiles/search`,
+        'POST',
+        JSON.stringify({
+          profileSearchRequestV3Model: {
+            organization_group_uuid: groupUuid,
+            page_number: page,
+          },
+        }),
+        '3',
+      );
+      accumulated += response.profiles.length ?? 0;
+      for (const profile of response.profiles) {
+        //If we need to add details, for now its not needed.
+        // const details = await this.makeRequest<AirwatchProfileResponse>(
+        //   `/mdm/profiles/${profile.uuid}`,
+        //   'GET',
+        //   undefined,
+        //   '3',
+        // );
+        await iteratee(profile);
+      }
+    } while (accumulated < response.total_count);
   }
 
   public async fetchDevicesForProfile(
