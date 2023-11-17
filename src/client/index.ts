@@ -178,6 +178,7 @@ export default class AirWatchClient {
         // );
         await iteratee(profile);
       }
+      page++;
     } while (accumulated < response.total_count);
   }
 
