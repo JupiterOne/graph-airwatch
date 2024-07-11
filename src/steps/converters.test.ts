@@ -5,15 +5,11 @@ import {
   AirWatchOrganizationGroup,
 } from '../client/types';
 import {
-  ADMIN_ENTITY_CLASS,
-  ADMIN_ENTITY_TYPE,
-  DEVICE_ENTITY_CLASS,
-  DEVICE_ENTITY_TYPE,
-  DEVICE_USER_ENTITY_CLASS,
-  DEVICE_USER_ENTITY_TYPE,
-  ORGANIZATION_GROUP_ENTITY_CLASS,
-  ORGANIZATION_GROUP_ENTITY_TYPE,
-} from './constants';
+  AdminEntityMetadata,
+  DeviceUserEntityMetadata,
+  OrganizationGroupEntityMetadata,
+  UserEndpointEntityMetadata,
+} from '../entities';
 import {
   createAdminEntity,
   createDeviceEntity,
@@ -79,9 +75,9 @@ const deviceUser: AirWatchDeviceUser = {
 describe('createAdminEntity', () => {
   test('all data', () => {
     expect(createAdminEntity('host', admin)).toMatchObject({
-      _class: [ADMIN_ENTITY_CLASS],
+      _class: [AdminEntityMetadata._class],
       _key: 'admin.uuid',
-      _type: ADMIN_ENTITY_TYPE,
+      _type: AdminEntityMetadata._type,
       _rawData: [
         {
           name: 'default',
@@ -110,8 +106,8 @@ describe('createAdminEntity', () => {
 
     expect(createAdminEntity('host', adminNoName)).toMatchObject({
       _key: 'admin.uuid',
-      _type: ADMIN_ENTITY_TYPE,
-      _class: [ADMIN_ENTITY_CLASS],
+      _type: AdminEntityMetadata._type,
+      _class: [AdminEntityMetadata._class],
       _rawData: [{ name: 'default', rawData: adminNoName }],
       uuid: 'admin.uuid',
       organizationGroupUuid: 'group.Uuid',
@@ -128,9 +124,9 @@ describe('createAdminEntity', () => {
 
 test('createDeviceEntity', () => {
   expect(createDeviceEntity('host', device)).toMatchObject({
-    _class: DEVICE_ENTITY_CLASS,
+    _class: UserEndpointEntityMetadata._class,
     _key: 'device.Uuid',
-    _type: DEVICE_ENTITY_TYPE,
+    _type: UserEndpointEntityMetadata._type,
     _rawData: [
       {
         name: 'default',
@@ -163,9 +159,9 @@ test('createOrganizationGroupEntity', () => {
   expect(
     createOrganizationGroupEntity('as1300.awmdm.com', organizationGroup),
   ).toMatchObject({
-    _class: ORGANIZATION_GROUP_ENTITY_CLASS,
+    _class: OrganizationGroupEntityMetadata._class,
     _key: 'group.Uuid',
-    _type: ORGANIZATION_GROUP_ENTITY_TYPE,
+    _type: OrganizationGroupEntityMetadata._type,
     _rawData: [
       {
         name: 'default',
@@ -187,9 +183,9 @@ test('createOrganizationGroupEntity', () => {
 
 test('createUserEntity', () => {
   expect(createUserEntity('host', deviceUser)).toMatchObject({
-    _class: [DEVICE_USER_ENTITY_CLASS],
+    _class: [DeviceUserEntityMetadata._class],
     _key: 'device.UserId.Uuid',
-    _type: DEVICE_USER_ENTITY_TYPE,
+    _type: DeviceUserEntityMetadata._type,
     _rawData: [
       {
         name: 'default',
