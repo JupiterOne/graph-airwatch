@@ -5,11 +5,8 @@ import {
 } from '@jupiterone/integration-sdk-core';
 
 import { IntegrationConfig } from '../types';
-import {
-  ACCOUNT_ENTITY_CLASS,
-  ACCOUNT_ENTITY_TYPE,
-  STEP_FETCH_ACCOUNT,
-} from './constants';
+import { Entities, STEP_FETCH_ACCOUNT } from './constants';
+import { createAccountAssignEntity } from '../entities';
 
 export const ACCOUNT_ENTITY_KEY = 'entity:account';
 
@@ -24,13 +21,13 @@ export async function fetchAccountDetails({
           host: instance.config.airwatchHost,
           username: instance.config.airwatchUsername,
         },
-        assign: {
-          _class: ACCOUNT_ENTITY_CLASS,
-          _type: ACCOUNT_ENTITY_TYPE,
+        assign: createAccountAssignEntity({
           _key: `airwatch-${instance.id}`,
           name: instance.config.airwatchHost,
+          displayName: instance.config.airwatchHost,
           webLink: `https://${instance.config.airwatchHost}`,
-        },
+          vendor: 'AirWatch',
+        }),
       },
     }),
   );
@@ -42,13 +39,7 @@ export const accountSteps: IntegrationStep<IntegrationConfig>[] = [
   {
     id: STEP_FETCH_ACCOUNT,
     name: 'Fetch Account Details',
-    entities: [
-      {
-        resourceName: 'Account',
-        _type: ACCOUNT_ENTITY_TYPE,
-        _class: ACCOUNT_ENTITY_CLASS,
-      },
-    ],
+    entities: [Entities.ACCOUNT],
     relationships: [],
     dependsOn: [],
     executionHandler: fetchAccountDetails,
