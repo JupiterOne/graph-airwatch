@@ -9,6 +9,7 @@ import validateInvocation from '../validateInvocation';
 import { fetchAdmins, fetchOrganizationGroups } from './access';
 import { fetchAccountDetails } from './account';
 import { fetchDevices } from './devices';
+import { AccountEntityMetadata } from '../entities';
 
 const integrationConfig: IntegrationConfig = {
   airwatchHost: process.env.AIRWATCH_HOST || 'as1985.awmdm.com',
@@ -56,16 +57,7 @@ test('should collect data', async () => {
   expect(accounts.length).toBeGreaterThan(0);
   expect(accounts).toMatchGraphObjectSchema({
     _class: ['Account'],
-    schema: {
-      additionalProperties: false,
-      properties: {
-        _type: { const: 'airwatch_account' },
-        _rawData: {
-          type: 'array',
-          items: { type: 'object' },
-        },
-      },
-    },
+    schema: AccountEntityMetadata.schema,
   });
 
   const users = context.jobState.collectedEntities.filter(

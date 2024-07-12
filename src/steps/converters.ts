@@ -42,6 +42,14 @@ export function createAdminEntity(host: string, data: AirWatchAdmin): Entity {
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email,
+        initialLandingPage: data.initialLandingPage,
+        lastLoginTimeStamp: parseTimePropertyValue(data.LastLoginTimeStamp),
+        locale: data.locale,
+        locationGroup: data.LocationGroup,
+        locationGroupId: data.LocationGroupId,
+        messageTemplateId: data.messageTemplateId,
+        messageTemplateUuid: data.messageTemplateUuid,
+        timeZone: data.timeZone,
       }),
     },
   });
@@ -82,11 +90,12 @@ export function createDeviceEntity(
         deviceId: data.Id.Value?.toString(),
         macAddress: formatMacAddress(data.MacAddress),
         category: 'endpoint',
-        lastSeenOn: parseTimePropertyValue(
-          !data.LastSeen || data.LastSeen?.endsWith('Z')
-            ? data.LastSeen
-            : data.LastSeen + 'Z',
-        ), // LastSeen is not correctly formatted as an ISO string in AirWatch so we have to do it manually.
+        lastSeenOn:
+          parseTimePropertyValue(
+            !data.LastSeen || data.LastSeen?.endsWith('Z')
+              ? data.LastSeen
+              : data.LastSeen + 'Z',
+          ) ?? null, // LastSeen is not correctly formatted as an ISO string in AirWatch so we have to do it manually.
         uuid: data.Uuid,
         serialNumber: data.SerialNumber,
         imei: data.Imei,
@@ -98,6 +107,7 @@ export function createDeviceEntity(
         wifiSsid: data.WifiSsid,
         isSupervised: data.IsSupervised,
         userEmailAddress: data.UserEmailAddress,
+        operatingSystem: data.OperatingSystem,
       }),
     },
   });
@@ -121,6 +131,10 @@ export function createOrganizationGroupEntity(
         groupId: data.GroupId,
         locationGroupType: data.LocationGroupType,
         country: data.Country,
+        admins: Number(data.Admins),
+        devices: Number(data.Devices),
+        users: Number(data.Users),
+        locale: data.Locale,
       }),
     },
   });

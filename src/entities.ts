@@ -56,6 +56,14 @@ export const [AdminEntityMetadata, createAdminAssignEntity] =
       firstName: SchemaType.Optional(SchemaType.String()),
       lastName: SchemaType.Optional(SchemaType.String()),
       email: SchemaType.Optional(SchemaType.String()),
+      initialLandingPage: SchemaType.Optional(SchemaType.String()),
+      lastLoginTimeStamp: SchemaType.Optional(SchemaType.Number()),
+      locale: SchemaType.Optional(SchemaType.String()),
+      locationGroup: SchemaType.Optional(SchemaType.String()),
+      locationGroupId: SchemaType.Optional(SchemaType.String()),
+      messageTemplateId: SchemaType.Optional(SchemaType.String()),
+      messageTemplateUuid: SchemaType.Optional(SchemaType.String()),
+      timeZone: SchemaType.Optional(SchemaType.String()),
     }),
   });
 
@@ -70,8 +78,30 @@ export const [
   schema: SchemaType.Object({
     uuid: SchemaType.Optional(SchemaType.String()),
     groupId: SchemaType.Optional(SchemaType.String()),
-    locationGroupType: SchemaType.Optional(SchemaType.String()),
+    locationGroupType: SchemaType.Optional(
+      SchemaType.String({
+        description: 'Type of organization group',
+        examples: ['Global', 'Customer', 'Partner'],
+      }),
+    ),
     country: SchemaType.Optional(SchemaType.String()),
+    admins: SchemaType.Optional(
+      SchemaType.Number({
+        description: 'Number of console admin users in the organization group',
+      }),
+    ),
+    devices: SchemaType.Optional(
+      SchemaType.Number({
+        description:
+          'Number of enrolled/unenrolled devices present in the organization group',
+      }),
+    ),
+    users: SchemaType.Optional(
+      SchemaType.Number({
+        description: 'Number of enrollment users in the organization group',
+      }),
+    ),
+    locale: SchemaType.Optional(SchemaType.String()),
   }),
 });
 
@@ -95,6 +125,7 @@ export const [UserEndpointEntityMetadata, createUserEndpointAssignEntity] =
       isSupervised: SchemaType.Optional(SchemaType.Boolean()),
       userEmailAddress: SchemaType.Optional(SchemaType.String()),
       airwatchPlatform: SchemaType.Optional(SchemaType.String()),
+      operatingSystem: SchemaType.Optional(SchemaType.String()),
     }),
   });
 

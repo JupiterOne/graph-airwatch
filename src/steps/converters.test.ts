@@ -24,6 +24,14 @@ const admin: AirWatchAdmin = {
   firstName: 'admin.firstName',
   lastName: 'admin.lastName',
   email: 'admin@myairwatch.test',
+  LocationGroup: '',
+  LocationGroupId: '',
+  LastLoginTimeStamp: '',
+  timeZone: '',
+  locale: '',
+  messageTemplateId: '',
+  messageTemplateUuid: '',
+  initialLandingPage: '',
 };
 
 const organizationGroup: AirWatchOrganizationGroup = {
@@ -35,6 +43,10 @@ const organizationGroup: AirWatchOrganizationGroup = {
   Country: 'group.Country',
   WebLink: 'group.WebLink',
   CreatedOn: '3/19/2020 12:19:56 AM',
+  Locale: 'en-US',
+  Users: 0,
+  Admins: 0,
+  Devices: 0,
 };
 
 const device: AirWatchDevice = {
@@ -75,7 +87,7 @@ const deviceUser: AirWatchDeviceUser = {
 describe('createAdminEntity', () => {
   test('all data', () => {
     expect(createAdminEntity('host', admin)).toMatchObject({
-      _class: [AdminEntityMetadata._class],
+      _class: AdminEntityMetadata._class,
       _key: 'admin.uuid',
       _type: AdminEntityMetadata._type,
       _rawData: [
@@ -107,7 +119,7 @@ describe('createAdminEntity', () => {
     expect(createAdminEntity('host', adminNoName)).toMatchObject({
       _key: 'admin.uuid',
       _type: AdminEntityMetadata._type,
-      _class: [AdminEntityMetadata._class],
+      _class: AdminEntityMetadata._class,
       _rawData: [{ name: 'default', rawData: adminNoName }],
       uuid: 'admin.uuid',
       organizationGroupUuid: 'group.Uuid',
@@ -183,7 +195,7 @@ test('createOrganizationGroupEntity', () => {
 
 test('createUserEntity', () => {
   expect(createUserEntity('host', deviceUser)).toMatchObject({
-    _class: [DeviceUserEntityMetadata._class],
+    _class: DeviceUserEntityMetadata._class,
     _key: 'device.UserId.Uuid',
     _type: DeviceUserEntityMetadata._type,
     _rawData: [
