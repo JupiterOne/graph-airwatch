@@ -6,11 +6,8 @@ import {
 
 import { IntegrationConfig } from '../types';
 import {
-  DEVICE_ENTITY_TYPE,
   DEVICE_PROFILE_REATIONSHIP_CLASS,
-  ORGANIZATION_GROUP_ENTITY_TYPE,
-  PROFILE_ENTITY_CLASS,
-  PROFILE_ENTITY_TYPE,
+  Entities,
   Relationships,
   STEP_BUILD_PROFILE_TO_DEVICE,
   STEP_FETCH_DEVICES,
@@ -19,6 +16,11 @@ import {
 } from './constants';
 import { createAPIClient } from '../client';
 import { createProfileEntity } from './converters';
+import {
+  OrganizationGroupEntityMetadata,
+  ProfileEntityMetadata,
+  UserEndpointEntityMetadata,
+} from '../entities';
 
 export async function fetchProfiles({
   instance,
@@ -27,7 +29,7 @@ export async function fetchProfiles({
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
   await jobState.iterateEntities(
-    { _type: ORGANIZATION_GROUP_ENTITY_TYPE },
+    { _type: OrganizationGroupEntityMetadata._type },
     async (groupEntity) => {
       await apiClient.iterateOrganizationGroupProfiles(async (profile) => {
         const profileEntity = createProfileEntity(apiClient.host, profile);
@@ -51,7 +53,7 @@ export async function buildDeviceProfileRelationships({
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
   await jobState.iterateEntities(
-    { _type: PROFILE_ENTITY_TYPE },
+    { _type: ProfileEntityMetadata._type },
     async (profileEntity) => {
       try {
         const response = await apiClient.fetchDevicesForProfile(
@@ -70,9 +72,9 @@ export async function buildDeviceProfileRelationships({
               createDirectRelationship({
                 _class: DEVICE_PROFILE_REATIONSHIP_CLASS,
                 fromKey: device.uuid,
-                fromType: DEVICE_ENTITY_TYPE,
+                fromType: UserEndpointEntityMetadata._type,
                 toKey: profileEntity._key,
-                toType: PROFILE_ENTITY_TYPE,
+                toType: ProfileEntityMetadata._type,
               }),
             );
           } else {
@@ -96,13 +98,7 @@ export const profileSteps: IntegrationStep<IntegrationConfig>[] = [
   {
     id: STEP_FETCH_PROFILES,
     name: 'Fetch Profile Details',
-    entities: [
-      {
-        resourceName: 'Profile',
-        _type: PROFILE_ENTITY_TYPE,
-        _class: PROFILE_ENTITY_CLASS,
-      },
-    ],
+    entities: [Entities.PROFILE],
     relationships: [],
     dependsOn: [STEP_FETCH_ORGANIZATION_GROUPS],
     executionHandler: fetchProfiles,

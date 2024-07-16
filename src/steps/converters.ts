@@ -1,4 +1,4 @@
-import moment from 'moment';
+import { utc } from 'moment';
 
 import {
   convertProperties,
@@ -15,17 +15,12 @@ import {
   AirwatchProfile,
 } from '../client/types';
 import {
-  ADMIN_ENTITY_CLASS,
-  ADMIN_ENTITY_TYPE,
-  DEVICE_ENTITY_CLASS,
-  DEVICE_ENTITY_TYPE,
-  DEVICE_USER_ENTITY_CLASS,
-  DEVICE_USER_ENTITY_TYPE,
-  ORGANIZATION_GROUP_ENTITY_CLASS,
-  ORGANIZATION_GROUP_ENTITY_TYPE,
-  PROFILE_ENTITY_CLASS,
-  PROFILE_ENTITY_TYPE,
-} from './constants';
+  createAdminAssignEntity,
+  createDeviceUserAssignEntity,
+  createOrganizationGroupAssignEntity,
+  createProfileAssignEntity,
+  createUserEndpointAssignEntity,
+} from '../entities';
 
 export function createAdminEntity(host: string, data: AirWatchAdmin): Entity {
   const name =
@@ -36,15 +31,26 @@ export function createAdminEntity(host: string, data: AirWatchAdmin): Entity {
   return createIntegrationEntity({
     entityData: {
       source: data,
-      assign: {
-        _class: ADMIN_ENTITY_CLASS,
-        _type: ADMIN_ENTITY_TYPE,
+      assign: createAdminAssignEntity({
         _key: data.uuid,
-        ...convertProperties(data),
         name,
         admin: true,
         webLink: `https://${host}/AirWatch/#/Admin/List`,
-      },
+        uuid: data.uuid,
+        organizationGroupUuid: data.organizationGroupUuid,
+        username: data.username,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        initialLandingPage: data.initialLandingPage,
+        lastLoginTimeStamp: parseTimePropertyValue(data.LastLoginTimeStamp),
+        locale: data.locale,
+        locationGroup: data.LocationGroup,
+        locationGroupId: data.LocationGroupId,
+        messageTemplateId: data.messageTemplateId,
+        messageTemplateUuid: data.messageTemplateUuid,
+        timeZone: data.timeZone,
+      }),
     },
   });
 }
@@ -58,36 +64,51 @@ export function createDeviceEntity(
     macAddress && macAddress.length == 12
       ? macAddress.replace(/(.{2})(?=.)/g, '$1:').toLowerCase()
       : undefined;
+  const name =
+    data.DeviceFriendlyName ||
+    `${data.UserName || 'Unknown User'}'s ${data.Model || 'Device'}`;
   return createIntegrationEntity({
     entityData: {
       source: data,
-      assign: {
-        _class: DEVICE_ENTITY_CLASS,
-        _type: DEVICE_ENTITY_TYPE,
+      assign: createUserEndpointAssignEntity({
         _key: data.Uuid,
-        ...convertProperties(data), // TODO: Explicitly pull out properties instead of using convertProperties.
+        // TODO: Explicitly pull out properties instead of using convertProperties.
         ...convertProperties(securityDetails ? securityDetails : {}),
         username: data.UserName,
+        owner: data.UserId?.Name,
         email: data.UserEmailAddress?.toLowerCase(),
         webLink: `https://${host}/AirWatch/#/AirWatch/Device/Details/Summary/${data.Id.Value}`,
-        name:
-          data.DeviceFriendlyName ||
-          `${data.UserName || 'Unknown User'}'s ${data.Model || 'Device'}`,
+        name,
+        displayName: name,
         hostname: data.HostName,
         complianceStatus: data.ComplianceStatus === 'Compliant' ? 1 : undefined,
-        platform: String(data.Platform).toLowerCase(),
+        // todo: use platformConverter once rollout strategy is implemented
+        platform: String(data.Platform).toLowerCase() as any,
         make: data.Model,
         model: data.Model,
         serial: data.SerialNumber,
         deviceId: data.Id.Value?.toString(),
         macAddress: formatMacAddress(data.MacAddress),
         category: 'endpoint',
-        lastSeenOn: parseTimePropertyValue(
-          !data.LastSeen || data.LastSeen?.endsWith('Z')
-            ? data.LastSeen
-            : data.LastSeen + 'Z',
-        ), // LastSeen is not correctly formatted as an ISO string in AirWatch so we have to do it manually.
-      },
+        lastSeenOn:
+          parseTimePropertyValue(
+            !data.LastSeen || data.LastSeen?.endsWith('Z')
+              ? data.LastSeen
+              : data.LastSeen + 'Z',
+          ) ?? null, // LastSeen is not correctly formatted as an ISO string in AirWatch so we have to do it manually.
+        uuid: data.Uuid,
+        serialNumber: data.SerialNumber,
+        imei: data.Imei,
+        deviceFriendlyName: data.DeviceFriendlyName,
+        ownerId: data.OwnerId,
+        assetNumber: data.AssetNumber,
+        hostName: data.HostName,
+        osName: data.OperatingSystem,
+        wifiSsid: data.WifiSsid,
+        isSupervised: data.IsSupervised,
+        userEmailAddress: data.UserEmailAddress,
+        operatingSystem: data.OperatingSystem,
+      }),
     },
   });
 }
@@ -99,15 +120,22 @@ export function createOrganizationGroupEntity(
   return createIntegrationEntity({
     entityData: {
       source: data,
-      assign: {
-        _class: ORGANIZATION_GROUP_ENTITY_CLASS,
+      assign: createOrganizationGroupAssignEntity({
         _key: data.Uuid,
-        _type: ORGANIZATION_GROUP_ENTITY_TYPE,
-        ...convertProperties(data),
+        displayName: data.Name,
+        name: data.Name,
         id: String(data.Id),
         webLink: `https://${host}/AirWatch/#/AirWatch/OrganizationGroup/Details/Index/${data.Id}`,
         createdOn: parseDatetime(data.CreatedOn),
-      },
+        uuid: data.Uuid,
+        groupId: data.GroupId,
+        locationGroupType: data.LocationGroupType,
+        country: data.Country,
+        admins: Number(data.Admins),
+        devices: Number(data.Devices),
+        users: Number(data.Users),
+        locale: data.Locale,
+      }),
     },
   });
 }
@@ -119,14 +147,14 @@ export function createUserEntity(
   return createIntegrationEntity({
     entityData: {
       source: data,
-      assign: {
-        _class: DEVICE_USER_ENTITY_CLASS,
-        _type: DEVICE_USER_ENTITY_TYPE,
+      assign: createDeviceUserAssignEntity({
         _key: data.Uuid,
-        ...convertProperties(data),
+        name: data.Name,
+        displayName: data.Name,
+        uuid: data.Uuid,
         username: data.Name,
         webLink: `https://${host}/AirWatch/#/AirWatch/User/Details/Summary/${data.Id.Value}`,
-      },
+      }),
     },
   });
 }
@@ -138,9 +166,7 @@ export function createProfileEntity(
   return createIntegrationEntity({
     entityData: {
       source: data,
-      assign: {
-        _class: PROFILE_ENTITY_CLASS,
-        _type: PROFILE_ENTITY_TYPE,
+      assign: createProfileAssignEntity({
         _key: data.uuid,
         name: data.name,
         platform: data.platform,
@@ -148,11 +174,11 @@ export function createProfileEntity(
         managedBy: data.managed_by,
         payloads: data.configured_payload.map((entry) => entry.name),
         webLink: `https://${host}/AirWatch/#/Profile/List/`,
-      },
+      }),
     },
   });
 }
 
 function parseDatetime(time: string): number {
-  return moment.utc(time, 'M/D/YYYY h:m:ss').unix();
+  return utc(time, 'M/D/YYYY h:m:ss').unix();
 }

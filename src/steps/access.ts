@@ -14,7 +14,6 @@ import {
   ACCOUNT_ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
   Entities,
   ORGANIZATION_GROUP_ADMIN_RELATIONSHIP_CLASS,
-  ORGANIZATION_GROUP_ENTITY_TYPE,
   ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
   Relationships,
   STEP_FETCH_ACCOUNT,
@@ -22,6 +21,7 @@ import {
   STEP_FETCH_ORGANIZATION_GROUPS,
 } from './constants';
 import { createAdminEntity, createOrganizationGroupEntity } from './converters';
+import { OrganizationGroupEntityMetadata } from '../entities';
 
 export async function fetchOrganizationGroups({
   instance,
@@ -51,7 +51,7 @@ export async function fetchOrganizationGroups({
   });
 
   await jobState.iterateEntities(
-    { _type: ORGANIZATION_GROUP_ENTITY_TYPE },
+    { _type: OrganizationGroupEntityMetadata._type },
     async (groupEntity) => {
       const groupData = getRawData(groupEntity) as AirWatchOrganizationGroup;
       for (const childGroup of groupData?.Children || []) {
@@ -60,9 +60,9 @@ export async function fetchOrganizationGroups({
           await jobState.addRelationship(
             createDirectRelationship({
               _class: ORGANIZATION_GROUP_RELATIONSHIP_CLASS,
-              fromType: ORGANIZATION_GROUP_ENTITY_TYPE,
+              fromType: OrganizationGroupEntityMetadata._type,
               fromKey: groupEntity._key,
-              toType: ORGANIZATION_GROUP_ENTITY_TYPE,
+              toType: OrganizationGroupEntityMetadata._type,
               toKey: childEntityKey,
             }),
           );

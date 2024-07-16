@@ -27,6 +27,14 @@ export interface AirWatchAdmin {
   firstName: string;
   lastName: string;
   email: string;
+  LocationGroup: string;
+  LocationGroupId: string;
+  LastLoginTimeStamp: string;
+  timeZone: string;
+  locale: string;
+  messageTemplateId: string;
+  messageTemplateUuid: string;
+  initialLandingPage: string;
 }
 
 export interface AirWatchDevice {
@@ -65,6 +73,10 @@ export interface AirWatchOrganizationGroup {
   Country: string;
   WebLink: string;
   CreatedOn: string;
+  Locale: string;
+  Users: number;
+  Admins: number;
+  Devices: number;
 
   /**
    * Organization groups that refer to this group as their
