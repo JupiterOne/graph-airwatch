@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 0.6.8 - 2024-7-17
+
+### Changed
+
+- Added schema informtation to integration entity types.
+
 ## 0.6 - 2023-11-15
 
 ### Changed
